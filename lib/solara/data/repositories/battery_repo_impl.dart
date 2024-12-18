@@ -1,5 +1,4 @@
-import 'package:solara/solara/data/datasources/battery_remote_datasource.dart';
-
+import '../datasources/battery_remote_datasource.dart';
 import '../../../core/resources/http_error.dart';
 import '../../domain/entities/battery.dart';
 import '../../domain/repositories/battery_repo.dart';

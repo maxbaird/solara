@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:solara/solara/domain/entities/house.dart';
+import '../../domain/entities/house.dart';
 
 class HouseModel extends Equatable {
   const HouseModel({
