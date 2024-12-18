@@ -1,18 +1,25 @@
 import 'package:http/http.dart';
 
+enum HttpExceptionType {
+  connectTimeout,
+  server,
+  localStorage,
+  other,
+  conversion,
+}
+
 class HttpError implements Exception {
   HttpError({
     this.response,
     this.error,
     this.errorMap,
+    this.type = HttpExceptionType.other,
   });
 
-  /// Response info, it may be `null` if the request can't reach to
-  /// the http server, for example, occurring a dns error, network is not
-  /// available.
+  HttpExceptionType type;
+
   Response? response;
 
-  /// The original error/exception object.
   dynamic error;
   Map<String, String>? errorMap;
   StackTrace? stackTrace;
