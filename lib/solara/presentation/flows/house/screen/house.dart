@@ -63,31 +63,45 @@ class SolaraGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Center(
-        child: AspectRatio(
-          aspectRatio: 1 / 2,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.6,
           child: LineChart(
             LineChartData(
               titlesData: FlTitlesData(
                 leftTitles: AxisTitles(
+                    axisNameSize: 24.0,
+                    axisNameWidget: Padding(
+                      padding: const EdgeInsets.only(bottom: 0.0),
+                      child: const Text('Watts',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16.0)),
+                    ),
                     sideTitles: SideTitles(
-                  reservedSize: 42,
-                  showTitles: true,
-                  getTitlesWidget: (value, _) {
-                    return Text(value.toInt().toString());
-                  },
-                )),
+                      reservedSize: 42,
+                      showTitles: true,
+                      getTitlesWidget: (value, _) {
+                        return Text(value.toInt().toString());
+                      },
+                    )),
                 bottomTitles: AxisTitles(
+                  axisNameWidget: const Text('Time of day',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16.0)),
+                  axisNameSize: 24.0,
                   sideTitles: SideTitles(
                     getTitlesWidget: (value, _) {
                       final DateTime date =
                           DateTime.fromMillisecondsSinceEpoch(value.toInt());
                       return Transform.rotate(
                           angle: -math.pi / 4,
-                          child: Text('${date.hour}:${date.minute}'));
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text('${date.hour}:${date.minute}'),
+                          ));
                     },
-                    reservedSize: 79,
+                    reservedSize: 40,
                     showTitles: true,
                     interval: 287.0 * Duration.millisecondsPerMinute,
                   ),
