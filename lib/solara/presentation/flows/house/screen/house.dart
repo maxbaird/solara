@@ -73,13 +73,18 @@ class SolaraDataVisualizer extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Switch(
-                  value: _showKilowatt,
-                  onChanged: (showKilowatt) {
-                    context
-                        .read<HouseBloc>()
-                        .add(ToggleWatts(showKilowatt: showKilowatt));
-                  }),
+              Row(
+                children: [
+                  Switch(
+                      value: _showKilowatt,
+                      onChanged: (showKilowatt) {
+                        context
+                            .read<HouseBloc>()
+                            .add(ToggleWatts(showKilowatt: showKilowatt));
+                      }),
+                  const Text('Toggle Wattage Unit'),
+                ],
+              ),
               ElevatedButton(
                 onPressed: () {
                   context.read<HouseBloc>().add(

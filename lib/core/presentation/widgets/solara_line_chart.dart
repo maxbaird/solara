@@ -68,12 +68,9 @@ class _LineChart extends StatelessWidget {
 class _LeftTitle {
   static AxisTitles get title => AxisTitles(
         axisNameSize: 24.0,
-        axisNameWidget: Padding(
-          padding: const EdgeInsets.only(bottom: 0.0),
-          child: const Text(
-            'Watts',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
-          ),
+        axisNameWidget: const Text(
+          'Watts',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
         ),
         sideTitles: SideTitles(
           reservedSize: 42,
