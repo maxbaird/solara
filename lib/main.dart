@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:solara/core/params/fetch_params.dart';
+import 'package:solara/solara/domain/usecases/battery_usecase.dart';
 import 'injection_container.dart' as dependency_injector;
+import 'injection_container.dart';
 
-void main() {
+void main() async {
   dependency_injector.init();
+
+  var (result, err) = await sl<FetchBatteryUseCase>().call(
+    params: FetchParams(
+      date: DateTime(2024, 03, 10),
+    ),
+  );
+
+  print(result);
+
   runApp(const MyApp());
 }
 
