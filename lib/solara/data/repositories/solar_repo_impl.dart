@@ -1,15 +1,12 @@
 import '../../../core/resources/http_error.dart';
 import '../../domain/entities/solar.dart';
 import '../../domain/repositories/solar_repo.dart';
-import '../datasources/solar_remote_datasource.dart';
 import '../models/solar_model.dart';
 
-class SolarRepoImpl implements SolarRepo {
+class SolarRepoImpl extends SolarRepo {
   const SolarRepoImpl(
-    this.solarRemoteDataSource,
+    super.solarRemoteDataSource,
   );
-
-  final SolarRemoteDataSource solarRemoteDataSource;
 
   @override
   Future<(List<SolarEntity>?, HttpError?)> fetch({DateTime? date}) async {

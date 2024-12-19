@@ -1,1 +1,1 @@
-const baseUrl = 'http://localhost:3000/monitoring';
+const baseUrl = 'http://localhost:3000/';

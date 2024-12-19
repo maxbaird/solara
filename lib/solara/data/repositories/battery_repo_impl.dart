@@ -1,12 +1,10 @@
-import '../datasources/battery_remote_datasource.dart';
 import '../../../core/resources/http_error.dart';
 import '../../domain/entities/battery.dart';
 import '../../domain/repositories/battery_repo.dart';
 import '../models/battery_model.dart';
 
-class BatteryRepoImpl implements BatteryRepo {
-  const BatteryRepoImpl(this.batteryRemoteDataSource);
-  final BatteryRemoteDataSource batteryRemoteDataSource;
+class BatteryRepoImpl extends BatteryRepo {
+  const BatteryRepoImpl(super.batteryRemoteDataSource);
 
   @override
   Future<(List<BatteryEntity>?, HttpError?)> fetch({DateTime? date}) async {

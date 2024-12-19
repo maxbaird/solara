@@ -1,15 +1,10 @@
 import '../../domain/entities/house.dart';
 import '../../../core/resources/http_error.dart';
 import '../../domain/repositories/house_repo.dart';
-import '../datasources/house_remote_datasource.dart';
 import '../models/house_model.dart';
 
-class HouseRepoImpl implements HouseRepo {
-  const HouseRepoImpl(
-    this.houseRemoteDataSource,
-  );
-
-  final HouseRemoteDataSource houseRemoteDataSource;
+class HouseRepoImpl extends HouseRepo {
+  const HouseRepoImpl(super.houseRemoteDataSource);
 
   @override
   Future<(List<HouseEntity>?, HttpError?)> fetch({DateTime? date}) async {
