@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:solara/core/presentation/widgets/solara_home.dart';
 
 import 'injection_container.dart' as dependency_injector;
-import 'solara/presentation/graph/screens/graph.dart';
 
 void main() {
   dependency_injector.init();
@@ -28,7 +28,7 @@ class Solara extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const _Solara(),
+      home: const _Solara(key: Key('_solara')),
     );
   }
 }
@@ -38,6 +38,10 @@ class _Solara extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Graph();
+    return SolaraHome(
+      homeWidget: const Placeholder(),
+      batteryWidget: const Placeholder(),
+      solarWidget: const Placeholder(),
+    );
   }
 }
