@@ -50,10 +50,12 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
       }
     }
 
-    emit(state.copyWith(
-      plotData: plotData,
-      blocStatus: SolaraBlocStatus.success,
-    ));
-    print(state.plotData);
+    emit(
+      state.copyWith(
+        plotData: plotData,
+        date: event.date,
+        blocStatus: SolaraBlocStatus.success,
+      ),
+    );
   }
 }

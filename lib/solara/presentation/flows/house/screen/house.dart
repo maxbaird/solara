@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:solara/core/presentation/util/flows/solara_plot_data.dart';
 
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
 import '../../../../../core/presentation/widgets/solara_circular_progress_indicator.dart';
@@ -21,7 +23,8 @@ class House extends StatelessWidget {
             SolaraBlocStatus.initial => const SolaraCircularProgressIndicator(),
             SolaraBlocStatus.inProgress =>
               const SolaraCircularProgressIndicator(),
-            SolaraBlocStatus.success => SolaraGraph(
+            SolaraBlocStatus.success => SolaraDataVisualizer(
+                date: state.date,
                 plotData: state.plotData,
               ),
             SolaraBlocStatus.failure => const SolaraError(
@@ -33,6 +36,50 @@ class House extends StatelessWidget {
           };
         },
       ),
+    );
+  }
+}
+
+class SolaraDataVisualizer extends StatelessWidget {
+  const SolaraDataVisualizer({
+    super.key,
+    required this.date,
+    required this.plotData,
+  });
+
+  final DateTime date;
+  final SolaraPlotData plotData;
+
+  String get _date => '${date.year}/${date.month}/${date.day}';
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SolaraGraph(
+          plotData: plotData,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Test'),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<HouseBloc>().add(
+                        Fetch(
+                          date: DateTime(2023, 03, 10),
+                        ),
+                      );
+                },
+                child: Text(_date),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
