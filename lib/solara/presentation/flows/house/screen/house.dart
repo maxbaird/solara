@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:solara/core/presentation/util/flows/solara_plot_data.dart';
 
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
