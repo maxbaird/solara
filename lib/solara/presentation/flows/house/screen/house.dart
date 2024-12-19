@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solara/core/presentation/util/flows/bloc/solara_unit_type.dart';
 import 'package:solara/core/presentation/util/flows/solara_plot_data.dart';
 
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
@@ -25,6 +26,7 @@ class House extends StatelessWidget {
             SolaraBlocStatus.success => SolaraDataVisualizer(
                 date: state.date,
                 plotData: state.plotData,
+                unitType: state.unitType,
               ),
             SolaraBlocStatus.failure => const SolaraError(
                 message: 'Failed to load data',
@@ -44,12 +46,19 @@ class SolaraDataVisualizer extends StatelessWidget {
     super.key,
     required this.date,
     required this.plotData,
+    required this.unitType,
   });
 
   final DateTime date;
   final SolaraPlotData plotData;
+  final SolaraUnitType unitType;
 
   String get _date => '${date.year}/${date.month}/${date.day}';
+
+  bool get _showKilowatt => switch (unitType) {
+        SolaraUnitType.kilowatts => true,
+        SolaraUnitType.watts => false,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +73,13 @@ class SolaraDataVisualizer extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Test'),
+              Switch(
+                  value: _showKilowatt,
+                  onChanged: (showKilowatt) {
+                    context
+                        .read<HouseBloc>()
+                        .add(ToggleWatts(showKilowatt: showKilowatt));
+                  }),
               ElevatedButton(
                 onPressed: () {
                   context.read<HouseBloc>().add(

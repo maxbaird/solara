@@ -19,6 +19,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
           blocStatus: SolaraBlocStatus.initial,
         )) {
     on<Fetch>(_onFetch);
+    on<ToggleWatts>(_onToggleWatts);
   }
 
   final FetchHouseUseCase fetchHouseUseCase;
@@ -55,6 +56,16 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
         plotData: plotData,
         date: event.date,
         blocStatus: SolaraBlocStatus.success,
+      ),
+    );
+  }
+
+  void _onToggleWatts(ToggleWatts event, Emitter<HouseState> emit) {
+    emit(
+      state.copyWith(
+        unitType: event.showKilowatt
+            ? SolaraUnitType.kilowatts
+            : SolaraUnitType.watts,
       ),
     );
   }

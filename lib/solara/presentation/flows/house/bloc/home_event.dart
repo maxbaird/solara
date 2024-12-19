@@ -9,3 +9,9 @@ final class Fetch extends HouseEvent {
 
   final DateTime date;
 }
+
+final class ToggleWatts extends HouseEvent {
+  const ToggleWatts({required this.showKilowatt});
+
+  final bool showKilowatt;
+}
