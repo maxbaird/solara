@@ -26,14 +26,14 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
   Future<void> _onFetch(Fetch event, Emitter<HouseState> emit) async {
     emit(state.copyWith(blocStatus: SolaraBlocStatus.inProgress));
 
-    var (result, err) =
+    var (houseEntities, err) =
         await fetchHouseUseCase.call(params: FetchParams(date: event.date));
 
     if (err != null) {
       emit(state.copyWith(blocStatus: SolaraBlocStatus.failure));
     } else {
       emit(state.copyWith(
-        houseEntities: result,
+        houseEntities: houseEntities,
         blocStatus: SolaraBlocStatus.success,
       ));
       print(state.houseEntities);

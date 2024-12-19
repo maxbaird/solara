@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -50,6 +51,76 @@ class SolaraGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Success! (Graph)'));
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      child: Center(
+        child: AspectRatio(
+          aspectRatio: 2.0,
+          child: LineChart(
+            LineChartData(
+              titlesData: FlTitlesData(
+                leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                  reservedSize: 42,
+                  showTitles: true,
+                  getTitlesWidget: (value, _) {
+                    return Text(value.toInt().toString());
+                  },
+                )),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    getTitlesWidget: (value, _) {
+                      final DateTime date =
+                          DateTime.fromMillisecondsSinceEpoch(value.toInt());
+                      return Text('${date.hour}:${date.minute}');
+                    },
+                    reservedSize: 32,
+                    showTitles: true,
+                    interval: 5.0 * Duration.millisecondsPerMinute,
+                  ),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+              ),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: [
+                    FlSpot(
+                        DateTime.parse('2024-10-03T00:00:00.000Z')
+                            .millisecondsSinceEpoch
+                            .toDouble(),
+                        3029),
+                    FlSpot(
+                        DateTime.parse('2024-10-03T00:05:00.000Z')
+                            .millisecondsSinceEpoch
+                            .toDouble(),
+                        6942),
+                    FlSpot(
+                        DateTime.parse('2024-10-03T00:10:00.000Z')
+                            .millisecondsSinceEpoch
+                            .toDouble(),
+                        7112),
+                    FlSpot(
+                        DateTime.parse('2024-10-03T00:15:00.000Z')
+                            .millisecondsSinceEpoch
+                            .toDouble(),
+                        7700),
+                    FlSpot(
+                        DateTime.parse('2024-10-03T00:20:00.000Z')
+                            .millisecondsSinceEpoch
+                            .toDouble(),
+                        5480),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
