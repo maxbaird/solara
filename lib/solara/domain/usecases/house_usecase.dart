@@ -14,6 +14,6 @@ class FetchHouseUseCase
   Future<(List<HouseEntity>?, HttpError?)> call({
     required FetchParams params,
   }) {
-    return _houseRepo.fetch(finder: params.finder);
+    return _houseRepo.fetch(date: params.date);
   }
 }

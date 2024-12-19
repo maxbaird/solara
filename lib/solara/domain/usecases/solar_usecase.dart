@@ -14,6 +14,6 @@ class FetchSolarUseCase
   Future<(List<SolarEntity>?, HttpError?)> call({
     required FetchParams params,
   }) {
-    return _solarRepo.fetch(finder: params.finder);
+    return _solarRepo.fetch(date: params.date);
   }
 }

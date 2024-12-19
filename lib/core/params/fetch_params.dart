@@ -1,11 +1,11 @@
 class FetchParams {
   const FetchParams({
-    this.finder,
+    this.date,
   });
 
-  final String? finder;
+  final DateTime? date;
 
-  FetchParams copyWith({String? finder}) => FetchParams(
-        finder: finder ?? this.finder,
+  FetchParams copyWith({DateTime? date}) => FetchParams(
+        date: date ?? this.date,
       );
 }

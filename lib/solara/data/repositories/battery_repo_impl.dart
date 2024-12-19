@@ -9,9 +9,9 @@ class BatteryRepoImpl implements BatteryRepo {
   final BatteryRemoteDataSource batteryRemoteDataSource;
 
   @override
-  Future<(List<BatteryEntity>?, HttpError?)> fetch({String? finder}) async {
+  Future<(List<BatteryEntity>?, HttpError?)> fetch({DateTime? date}) async {
     var (batteryEntities, err) = await batteryRemoteDataSource.fetch(
-      finder: finder,
+      date: date,
     );
 
     return (_toEntityList(batteryEntities), err);

@@ -12,9 +12,9 @@ class HouseRepoImpl implements HouseRepo {
   final HouseRemoteDataSource houseRemoteDataSource;
 
   @override
-  Future<(List<HouseEntity>?, HttpError?)> fetch({String? finder}) async {
+  Future<(List<HouseEntity>?, HttpError?)> fetch({DateTime? date}) async {
     var (houseEntities, err) = await houseRemoteDataSource.fetch(
-      finder: finder,
+      date: date,
     );
 
     return (_toEntityList(houseEntities), err);

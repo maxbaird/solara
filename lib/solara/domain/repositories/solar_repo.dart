@@ -3,6 +3,6 @@ import '../entities/solar.dart';
 
 abstract class SolarRepo {
   Future<(List<SolarEntity>?, HttpError?)> fetch({
-    String? finder,
+    DateTime? date,
   });
 }

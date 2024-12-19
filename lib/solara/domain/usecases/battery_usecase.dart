@@ -14,6 +14,6 @@ class FetchBatteryUseCase
   Future<(List<BatteryEntity>?, HttpError?)> call({
     required FetchParams params,
   }) {
-    return _batteryRepo.fetch(finder: params.finder);
+    return _batteryRepo.fetch(date: params.date);
   }
 }

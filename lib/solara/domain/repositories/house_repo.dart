@@ -3,6 +3,6 @@ import '../entities/house.dart';
 
 abstract class HouseRepo {
   Future<(List<HouseEntity>?, HttpError?)> fetch({
-    String? finder,
+    DateTime? date,
   });
 }

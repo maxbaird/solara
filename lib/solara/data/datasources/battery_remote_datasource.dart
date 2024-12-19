@@ -6,9 +6,9 @@ import '../../../core/util/logger.dart';
 import '../models/battery_model.dart';
 
 class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
-  BatteryRemoteDataSourceImpl(RepoConfig connection, String endPoint)
-      : super(connection, endPoint) {
-    _endPointUrl = connection.baseUrl + endPoint;
+  BatteryRemoteDataSourceImpl(RepoConfig connection, String path)
+      : super(connection, path) {
+    _endPointUrl = connection.baseUrl + path;
   }
 
   late final String _endPointUrl;
@@ -16,7 +16,7 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
   final _log = logger;
 
   @override
-  Future<(List<BatteryModel>?, HttpError?)> fetch({String? finder}) async {
+  Future<(List<BatteryModel>?, HttpError?)> fetch({DateTime? date}) async {
     uri = Uri.parse(_endPointUrl);
     uri = Uri(
       scheme: uri.scheme,
@@ -83,6 +83,6 @@ abstract class BatteryRemoteDataSource {
   Uri uri = Uri();
 
   Future<(List<BatteryModel>?, HttpError?)> fetch({
-    String? finder,
+    DateTime? date,
   });
 }

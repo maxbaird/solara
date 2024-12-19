@@ -6,9 +6,9 @@ import '../../../core/util/logger.dart';
 import '../models/solar_model.dart';
 
 class SolarRemoteDataSourceImpl extends SolarRemoteDataSource {
-  SolarRemoteDataSourceImpl(RepoConfig connection, String endPoint)
-      : super(connection, endPoint) {
-    _endPointUrl = connection.baseUrl + endPoint;
+  SolarRemoteDataSourceImpl(RepoConfig connection, String path)
+      : super(connection, path) {
+    _endPointUrl = connection.baseUrl + path;
   }
 
   late final String _endPointUrl;
@@ -16,7 +16,7 @@ class SolarRemoteDataSourceImpl extends SolarRemoteDataSource {
   final _log = logger;
 
   @override
-  Future<(List<SolarModel>?, HttpError?)> fetch({String? finder}) async {
+  Future<(List<SolarModel>?, HttpError?)> fetch({DateTime? date}) async {
     uri = Uri.parse(_endPointUrl);
     uri = Uri(
       scheme: uri.scheme,
@@ -83,6 +83,6 @@ abstract class SolarRemoteDataSource {
   Uri uri = Uri();
 
   Future<(List<SolarModel>?, HttpError?)> fetch({
-    String? finder,
+    DateTime? date,
   });
 }

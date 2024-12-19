@@ -6,9 +6,9 @@ import '../../../core/util/logger.dart';
 import '../models/house_model.dart';
 
 class HouseRemoteDataSourceImpl extends HouseRemoteDataSource {
-  HouseRemoteDataSourceImpl(RepoConfig connection, String endPoint)
-      : super(connection, endPoint) {
-    _endPointUrl = connection.baseUrl + endPoint;
+  HouseRemoteDataSourceImpl(RepoConfig connection, String path)
+      : super(connection, path) {
+    _endPointUrl = connection.baseUrl + path;
   }
 
   late final String _endPointUrl;
@@ -16,7 +16,7 @@ class HouseRemoteDataSourceImpl extends HouseRemoteDataSource {
   final _log = logger;
 
   @override
-  Future<(List<HouseModel>?, HttpError?)> fetch({String? finder}) async {
+  Future<(List<HouseModel>?, HttpError?)> fetch({DateTime? date}) async {
     uri = Uri.parse(_endPointUrl);
     uri = Uri(
       scheme: uri.scheme,
@@ -83,6 +83,6 @@ abstract class HouseRemoteDataSource {
   Uri uri = Uri();
 
   Future<(List<HouseModel>?, HttpError?)> fetch({
-    String? finder,
+    DateTime? date,
   });
 }
