@@ -5,12 +5,12 @@ import 'solara_title.dart';
 class SolaraHome extends StatelessWidget {
   const SolaraHome({
     super.key,
-    required this.homeWidget,
+    required this.houseWidget,
     required this.batteryWidget,
     required this.solarWidget,
   });
 
-  final Widget homeWidget;
+  final Widget houseWidget;
   final Widget batteryWidget;
   final Widget solarWidget;
 
@@ -40,7 +40,7 @@ class SolaraHome extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            homeWidget,
+            houseWidget,
             batteryWidget,
             solarWidget,
           ],

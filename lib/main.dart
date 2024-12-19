@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:solara/core/presentation/widgets/solara_home.dart';
 
 import 'injection_container.dart' as dependency_injector;
+import 'solara/presentation/flows/house/screen/house.dart';
 
 void main() {
   dependency_injector.init();
@@ -39,7 +40,7 @@ class _Solara extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SolaraHome(
-      homeWidget: const Placeholder(),
+      houseWidget: const House(),
       batteryWidget: const Placeholder(),
       solarWidget: const Placeholder(),
     );
