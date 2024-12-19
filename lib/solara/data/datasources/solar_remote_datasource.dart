@@ -8,24 +8,35 @@ import '../models/solar_model.dart';
 class SolarRemoteDataSourceImpl extends SolarRemoteDataSource {
   SolarRemoteDataSourceImpl(RepoConfig connection, String path)
       : super(connection, path) {
-    _endPointUrl = connection.baseUrl + path;
+    _url = connection.baseUrl + path;
   }
 
-  late final String _endPointUrl;
+  late final String _url;
 
   final _log = logger;
 
   @override
   Future<(List<SolarModel>?, HttpError?)> fetch({DateTime? date}) async {
-    uri = Uri.parse(_endPointUrl);
+    String endPointUrl = _url;
+    final params = <String, String>{};
+
+    uri = Uri.parse(endPointUrl);
+
+    if (date != null) {
+      params['date'] = date.toIso8601String();
+    }
+
+    params['type'] = 'solar';
+
     uri = Uri(
       scheme: uri.scheme,
       host: uri.host,
       port: uri.port,
       path: uri.path,
+      queryParameters: params,
     );
 
-    _log.i('Fetching Lookup from URL: $uri');
+    _log.i('Fetching Solar from Uri: $uri');
 
     Response? res;
 
@@ -53,8 +64,7 @@ class SolarRemoteDataSourceImpl extends SolarRemoteDataSource {
 
     //Success
     try {
-      Map<String, dynamic> responseMap = json.decode(res.body);
-      List<dynamic> items = responseMap['data'] ?? [];
+      List<dynamic> items = json.decode(res.body);
       List<SolarModel> results = [];
 
       for (var item in items) {

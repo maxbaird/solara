@@ -11,7 +11,7 @@ class SolarModel extends Equatable {
   final int? watts;
 
   SolarModel.fromJson(Map<String, dynamic> json)
-      : date = json['timestamp'],
+      : date = DateTime.parse(json['timestamp']),
         watts = json['value'];
 
   SolarEntity toEntity() => SolarEntity(

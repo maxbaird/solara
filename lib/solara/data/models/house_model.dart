@@ -11,7 +11,7 @@ class HouseModel extends Equatable {
   final int? watts;
 
   HouseModel.fromJson(Map<String, dynamic> json)
-      : date = json['timestamp'],
+      : date = DateTime.parse(json['timestamp']),
         watts = json['value'];
 
   HouseEntity toEntity() => HouseEntity(

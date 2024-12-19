@@ -12,6 +12,8 @@ import 'solara/domain/repositories/battery_repo.dart';
 import 'solara/domain/repositories/house_repo.dart';
 import 'solara/domain/repositories/solar_repo.dart';
 import 'solara/domain/usecases/battery_usecase.dart';
+import 'solara/domain/usecases/house_usecase.dart';
+import 'solara/domain/usecases/solar_usecase.dart';
 
 final GetIt sl = GetIt.instance;
 final RepoConfig solaraRepoConfig = RepoConfig(baseUrl: baseUrl);
@@ -43,5 +45,13 @@ void init() {
 
   sl.registerLazySingleton<FetchBatteryUseCase>(
     () => FetchBatteryUseCase(sl()),
+  );
+
+  sl.registerLazySingleton<FetchHouseUseCase>(
+    () => FetchHouseUseCase(sl()),
+  );
+
+  sl.registerLazySingleton<FetchSolarUseCase>(
+    () => FetchSolarUseCase(sl()),
   );
 }

@@ -36,7 +36,7 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
       queryParameters: params,
     );
 
-    _log.i('Fetching Lookup from URL: $uri');
+    _log.i('Fetching Battery from Uri: $uri');
 
     Response? res;
 
