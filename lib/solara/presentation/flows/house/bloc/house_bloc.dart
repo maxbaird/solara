@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/params/fetch_params.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_unit_type.dart';
-import '../../../../domain/entities/house.dart';
+import '../../../../../core/presentation/util/flows/solara_plot_data.dart';
 import '../../../../domain/usecases/house_usecase.dart';
 
 part 'home_event.dart';
@@ -15,7 +15,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
       : super(HouseInitial(
           date: DateTime.now(),
           unitType: SolaraUnitType.watts,
-          houseEntities: [],
+          plotData: {},
           blocStatus: SolaraBlocStatus.initial,
         )) {
     on<Fetch>(_onFetch);
@@ -31,12 +31,29 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
 
     if (err != null) {
       emit(state.copyWith(blocStatus: SolaraBlocStatus.failure));
-    } else {
-      emit(state.copyWith(
-        houseEntities: houseEntities,
-        blocStatus: SolaraBlocStatus.success,
-      ));
-      print(state.houseEntities);
+      return;
     }
+
+    if (houseEntities == null || houseEntities.isEmpty) {
+      emit(state.copyWith(blocStatus: SolaraBlocStatus.noData));
+      return;
+    }
+
+    SolaraPlotData plotData = {};
+
+    for (var houseEntity in houseEntities) {
+      double? date = houseEntity.date?.millisecondsSinceEpoch.toDouble();
+      double? watts = houseEntity.watts?.toDouble();
+
+      if (date != null && watts != null) {
+        plotData[date] = watts;
+      }
+    }
+
+    emit(state.copyWith(
+      plotData: plotData,
+      blocStatus: SolaraBlocStatus.success,
+    ));
+    print(state.plotData);
   }
 }

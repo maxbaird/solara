@@ -4,13 +4,13 @@ final class HouseState extends Equatable {
   const HouseState({
     required this.date,
     required this.unitType,
-    required this.houseEntities,
+    required this.plotData,
     required this.blocStatus,
   });
 
   final DateTime date;
   final SolaraUnitType unitType;
-  final List<HouseEntity> houseEntities;
+  final SolaraPlotData plotData;
   final SolaraBlocStatus blocStatus;
 
   @override
@@ -23,13 +23,13 @@ final class HouseState extends Equatable {
   HouseState copyWith({
     DateTime? date,
     SolaraUnitType? unitType,
-    List<HouseEntity>? houseEntities,
+    SolaraPlotData? plotData,
     SolaraBlocStatus? blocStatus,
   }) =>
       HouseState(
         date: date ?? this.date,
         unitType: unitType ?? this.unitType,
-        houseEntities: houseEntities ?? this.houseEntities,
+        plotData: plotData ?? this.plotData,
         blocStatus: blocStatus ?? this.blocStatus,
       );
 }
@@ -38,7 +38,7 @@ final class HouseInitial extends HouseState {
   const HouseInitial({
     required super.date,
     required super.unitType,
-    required super.houseEntities,
+    required super.plotData,
     required super.blocStatus,
   });
 }

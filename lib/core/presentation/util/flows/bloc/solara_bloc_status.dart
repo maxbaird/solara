@@ -2,5 +2,6 @@ enum SolaraBlocStatus {
   initial,
   success,
   failure,
-  inProgress;
+  inProgress,
+  noData,
 }

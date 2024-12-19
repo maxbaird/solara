@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solara/core/presentation/util/flows/solara_plot_data.dart';
+import 'dart:math' as math;
 
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
 import '../../../../../injection_container.dart';
@@ -19,8 +21,9 @@ class House extends StatelessWidget {
             SolaraBlocStatus.initial => const SolaraCircularProgressIndicator(),
             SolaraBlocStatus.inProgress =>
               const SolaraCircularProgressIndicator(),
-            SolaraBlocStatus.success => const SolaraGraph(),
-            SolaraBlocStatus.failure => const SolaraFailure(),
+            SolaraBlocStatus.success => SolaraGraph(plotData: state.plotData),
+            SolaraBlocStatus.failure => const SolaraError(),
+            SolaraBlocStatus.noData => const SolaraError(),
           };
         },
       ),
@@ -37,8 +40,8 @@ class SolaraCircularProgressIndicator extends StatelessWidget {
   }
 }
 
-class SolaraFailure extends StatelessWidget {
-  const SolaraFailure({super.key});
+class SolaraError extends StatelessWidget {
+  const SolaraError({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,15 @@ class SolaraFailure extends StatelessWidget {
 }
 
 class SolaraGraph extends StatelessWidget {
-  const SolaraGraph({super.key});
+  const SolaraGraph({
+    super.key,
+    required this.plotData,
+  });
+
+  final SolaraPlotData plotData;
+
+  List<FlSpot> get _flSpots =>
+      plotData.entries.map((entry) => FlSpot(entry.key, entry.value)).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +66,7 @@ class SolaraGraph extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
       child: Center(
         child: AspectRatio(
-          aspectRatio: 2.0,
+          aspectRatio: 1 / 2,
           child: LineChart(
             LineChartData(
               titlesData: FlTitlesData(
@@ -72,11 +83,13 @@ class SolaraGraph extends StatelessWidget {
                     getTitlesWidget: (value, _) {
                       final DateTime date =
                           DateTime.fromMillisecondsSinceEpoch(value.toInt());
-                      return Text('${date.hour}:${date.minute}');
+                      return Transform.rotate(
+                          angle: -math.pi / 4,
+                          child: Text('${date.hour}:${date.minute}'));
                     },
-                    reservedSize: 32,
+                    reservedSize: 79,
                     showTitles: true,
-                    interval: 5.0 * Duration.millisecondsPerMinute,
+                    interval: 287.0 * Duration.millisecondsPerMinute,
                   ),
                 ),
                 topTitles: AxisTitles(
@@ -88,33 +101,34 @@ class SolaraGraph extends StatelessWidget {
               ),
               lineBarsData: [
                 LineChartBarData(
-                  spots: [
-                    FlSpot(
-                        DateTime.parse('2024-10-03T00:00:00.000Z')
-                            .millisecondsSinceEpoch
-                            .toDouble(),
-                        3029),
-                    FlSpot(
-                        DateTime.parse('2024-10-03T00:05:00.000Z')
-                            .millisecondsSinceEpoch
-                            .toDouble(),
-                        6942),
-                    FlSpot(
-                        DateTime.parse('2024-10-03T00:10:00.000Z')
-                            .millisecondsSinceEpoch
-                            .toDouble(),
-                        7112),
-                    FlSpot(
-                        DateTime.parse('2024-10-03T00:15:00.000Z')
-                            .millisecondsSinceEpoch
-                            .toDouble(),
-                        7700),
-                    FlSpot(
-                        DateTime.parse('2024-10-03T00:20:00.000Z')
-                            .millisecondsSinceEpoch
-                            .toDouble(),
-                        5480),
-                  ],
+                  spots: _flSpots,
+                  // spots: [
+                  //   FlSpot(
+                  //       DateTime.parse('2024-10-03T00:00:00.000Z')
+                  //           .millisecondsSinceEpoch
+                  //           .toDouble(),
+                  //       3029),
+                  //   FlSpot(
+                  //       DateTime.parse('2024-10-03T00:05:00.000Z')
+                  //           .millisecondsSinceEpoch
+                  //           .toDouble(),
+                  //       6942),
+                  //   FlSpot(
+                  //       DateTime.parse('2024-10-03T00:10:00.000Z')
+                  //           .millisecondsSinceEpoch
+                  //           .toDouble(),
+                  //       7112),
+                  //   FlSpot(
+                  //       DateTime.parse('2024-10-03T00:15:00.000Z')
+                  //           .millisecondsSinceEpoch
+                  //           .toDouble(),
+                  //       7700),
+                  //   FlSpot(
+                  //       DateTime.parse('2024-10-03T00:20:00.000Z')
+                  //           .millisecondsSinceEpoch
+                  //           .toDouble(),
+                  //       5480),
+                  // ],
                 )
               ],
             ),
