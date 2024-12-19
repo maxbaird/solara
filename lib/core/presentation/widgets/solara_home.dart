@@ -25,8 +25,8 @@ class SolaraHome extends StatelessWidget {
           centerTitle: true,
           bottom: TabBar(tabs: [
             Tab(
-              icon: Icon(Icons.home),
-              child: const Text('Home'),
+              icon: Icon(Icons.house),
+              child: const Text('House'),
             ),
             Tab(
               icon: Icon(Icons.battery_charging_full),
