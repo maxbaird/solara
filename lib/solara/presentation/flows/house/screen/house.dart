@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
-import '../../../../../core/presentation/util/flows/bloc/solara_unit_type.dart';
-import '../../../../../core/presentation/util/flows/solara_plot_data.dart';
 import '../../../../../core/presentation/widgets/solara_circular_progress_indicator.dart';
+import '../../../../../core/presentation/widgets/solara_data_visualizer.dart';
 import '../../../../../core/presentation/widgets/solara_error.dart';
-import '../../../../../core/presentation/widgets/solara_line_chart.dart';
 import '../../../../../injection_container.dart';
 import '../bloc/house_bloc.dart';
 
 class House extends StatelessWidget {
   const House({super.key});
+
+  void _onToggleUnit(bool showKilowatt, BuildContext context) {
+    context.read<HouseBloc>().add(ToggleWatts(showKilowatt: showKilowatt));
+  }
+
+  void _onDateChange(DateTime date, BuildContext context) {
+    context.read<HouseBloc>().add(Fetch(date: date));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +33,14 @@ class House extends StatelessWidget {
                 date: state.date,
                 plotData: state.plotData,
                 unitType: state.unitType,
+                onToggleUnit: (showKilowatt) => _onToggleUnit(
+                  showKilowatt,
+                  context,
+                ),
+                onDateChange: (date) => _onDateChange(
+                  date,
+                  context,
+                ),
               ),
             SolaraBlocStatus.failure => const SolaraError(
                 message: 'Failed to load data',
@@ -37,99 +51,6 @@ class House extends StatelessWidget {
           };
         },
       ),
-    );
-  }
-}
-
-class SolaraDataVisualizer extends StatelessWidget {
-  const SolaraDataVisualizer({
-    super.key,
-    required this.date,
-    required this.plotData,
-    required this.unitType,
-  });
-
-  final DateTime date;
-  final SolaraPlotData plotData;
-  final SolaraUnitType unitType;
-
-  String get _date => '${date.year}/${date.month}/${date.day}';
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SolaraGraph(
-          xLabel: _date,
-          plotData: plotData,
-          unitType: unitType,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: _BottomRow(
-            key: const Key('solaraBottomRow'),
-            currentlySelectedDate: date,
-            unitType: unitType,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _BottomRow extends StatelessWidget {
-  const _BottomRow({
-    super.key,
-    required this.unitType,
-    required this.currentlySelectedDate,
-  });
-
-  final SolaraUnitType unitType;
-  final DateTime currentlySelectedDate;
-
-  bool get _showKilowatt => switch (unitType) {
-        SolaraUnitType.kilowatts => true,
-        SolaraUnitType.watts => false,
-      };
-
-  void _onToggleUnit(bool showKilowatt, BuildContext context) {
-    context.read<HouseBloc>().add(ToggleWatts(showKilowatt: showKilowatt));
-  }
-
-  Future<void> _onDateChange(BuildContext context) async {
-    DateTime? date = await showDatePicker(
-      context: context,
-      barrierDismissible: false,
-      initialDate: currentlySelectedDate,
-      firstDate: DateTime(1995),
-      lastDate: DateTime.now(),
-    );
-    if (!context.mounted || date == null) {
-      return;
-    }
-    context.read<HouseBloc>().add(Fetch(date: date));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Switch(
-              value: _showKilowatt,
-              onChanged: (showKilowatt) => _onToggleUnit(showKilowatt, context),
-            ),
-            const Text('Toggle Wattage Unit'),
-          ],
-        ),
-        ElevatedButton(
-          onPressed: () => _onDateChange(context),
-          child: const Text('Select Date'),
-        ),
-      ],
     );
   }
 }
