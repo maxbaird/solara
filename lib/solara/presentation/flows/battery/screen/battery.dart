@@ -6,23 +6,23 @@ import '../../../../../core/presentation/widgets/solara_circular_progress_indica
 import '../../../../../core/presentation/widgets/solara_data_visualizer.dart';
 import '../../../../../core/presentation/widgets/solara_error.dart';
 import '../../../../../injection_container.dart';
-import '../bloc/house_bloc.dart';
+import '../bloc/battery_bloc.dart';
 
-class House extends StatefulWidget {
-  const House({super.key});
+class Battery extends StatefulWidget {
+  const Battery({super.key});
 
   @override
-  State<House> createState() => _HouseState();
+  State<Battery> createState() => _BatteryState();
 }
 
-class _HouseState extends State<House>
-    with AutomaticKeepAliveClientMixin<House> {
+class _BatteryState extends State<Battery>
+    with AutomaticKeepAliveClientMixin<Battery> {
   void _onToggleUnit(bool showKilowatt, BuildContext context) {
-    context.read<HouseBloc>().add(ToggleWatts(showKilowatt: showKilowatt));
+    context.read<BatteryBloc>().add(ToggleWatts(showKilowatt: showKilowatt));
   }
 
   void _onDateChange(DateTime date, BuildContext context) {
-    context.read<HouseBloc>().add(Fetch(date: date));
+    context.read<BatteryBloc>().add(Fetch(date: date));
   }
 
   @override
@@ -31,9 +31,9 @@ class _HouseState extends State<House>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return BlocProvider<HouseBloc>(
+    return BlocProvider<BatteryBloc>(
       create: (context) => sl()..add(Fetch(date: DateTime.now())),
-      child: BlocBuilder<HouseBloc, HouseState>(
+      child: BlocBuilder<BatteryBloc, BatteryState>(
         builder: (context, state) {
           return switch (state.blocStatus) {
             SolaraBlocStatus.initial => const SolaraCircularProgressIndicator(),

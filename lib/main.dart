@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:solara/core/presentation/widgets/solara_home.dart';
 
+import 'core/presentation/widgets/solara_home.dart';
 import 'injection_container.dart' as dependency_injector;
+import 'solara/presentation/flows/battery/screen/battery.dart';
 import 'solara/presentation/flows/house/screen/house.dart';
 
 void main() {
   dependency_injector.init();
-
-  // var (result, err) = await sl<FetchSolarUseCase>().call(
-  //   params: FetchParams(
-  //     date: DateTime(2024, 03, 10),
-  //   ),
-  // );
-
-  // print(result);
-
   runApp(const Solara());
 }
 
@@ -41,7 +33,7 @@ class _Solara extends StatelessWidget {
   Widget build(BuildContext context) {
     return SolaraHome(
       houseWidget: const House(),
-      batteryWidget: const Placeholder(),
+      batteryWidget: const Battery(),
       solarWidget: const Placeholder(),
     );
   }

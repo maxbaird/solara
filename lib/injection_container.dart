@@ -14,6 +14,7 @@ import 'solara/domain/repositories/solar_repo.dart';
 import 'solara/domain/usecases/battery_usecase.dart';
 import 'solara/domain/usecases/house_usecase.dart';
 import 'solara/domain/usecases/solar_usecase.dart';
+import 'solara/presentation/flows/battery/bloc/battery_bloc.dart';
 import 'solara/presentation/flows/house/bloc/house_bloc.dart';
 
 final GetIt sl = GetIt.instance;
@@ -57,4 +58,6 @@ void init() {
   );
 
   sl.registerFactory<HouseBloc>(() => HouseBloc(fetchHouseUseCase: sl()));
+  sl.registerFactory<BatteryBloc>(() => BatteryBloc(fetchBatteryUseCase: sl()));
+  // sl.registerFactory<SolarBloc>(() => SolarBloc(fetchSolarUseCase: sl()));
 }
