@@ -40,6 +40,17 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
       return;
     }
 
+    /// Filter away null dates and keep dates that exactly match [event.date]
+    houseEntities = houseEntities.where((e) {
+      final DateTime? d = e.date;
+      if (d != null) {
+        return d.year == event.date.year &&
+            d.month == event.date.month &&
+            d.day == event.date.day;
+      }
+      return false;
+    }).toList();
+
     SolaraPlotData plotData = {};
 
     for (var houseEntity in houseEntities) {
