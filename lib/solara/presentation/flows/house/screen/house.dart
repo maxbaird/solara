@@ -67,8 +67,11 @@ class SolaraDataVisualizer extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child:
-              _BottomRow(key: const Key('solaraBottomRow'), unitType: unitType),
+          child: _BottomRow(
+            key: const Key('solaraBottomRow'),
+            currentlySelectedDate: date,
+            unitType: unitType,
+          ),
         ),
       ],
     );
@@ -79,9 +82,11 @@ class _BottomRow extends StatelessWidget {
   const _BottomRow({
     super.key,
     required this.unitType,
+    required this.currentlySelectedDate,
   });
 
   final SolaraUnitType unitType;
+  final DateTime currentlySelectedDate;
 
   bool get _showKilowatt => switch (unitType) {
         SolaraUnitType.kilowatts => true,
@@ -92,12 +97,18 @@ class _BottomRow extends StatelessWidget {
     context.read<HouseBloc>().add(ToggleWatts(showKilowatt: showKilowatt));
   }
 
-  void _onDateChange(BuildContext context) {
-    context.read<HouseBloc>().add(
-          Fetch(
-            date: DateTime(2023, 03, 10),
-          ),
-        );
+  Future<void> _onDateChange(BuildContext context) async {
+    DateTime? date = await showDatePicker(
+      context: context,
+      barrierDismissible: false,
+      initialDate: currentlySelectedDate,
+      firstDate: DateTime(1995),
+      lastDate: DateTime.now(),
+    );
+    if (!context.mounted || date == null) {
+      return;
+    }
+    context.read<HouseBloc>().add(Fetch(date: date));
   }
 
   @override
