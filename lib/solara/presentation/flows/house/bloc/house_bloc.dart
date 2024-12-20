@@ -7,7 +7,7 @@ import '../../../../../core/presentation/util/flows/bloc/solara_unit_type.dart';
 import '../../../../../core/presentation/util/flows/solara_plot_data.dart';
 import '../../../../domain/usecases/house_usecase.dart';
 
-part 'home_event.dart';
+part 'house_event.dart';
 part 'house_state.dart';
 
 class HouseBloc extends Bloc<HouseEvent, HouseState> {
