@@ -65,9 +65,7 @@ class SolaraDataVisualizer extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SolaraGraph(
-          plotData: plotData,
-        ),
+        SolaraGraph(xLabel: _date, plotData: plotData),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
@@ -93,7 +91,7 @@ class SolaraDataVisualizer extends StatelessWidget {
                         ),
                       );
                 },
-                child: Text(_date),
+                child: const Text('Select Date'),
               ),
             ],
           ),

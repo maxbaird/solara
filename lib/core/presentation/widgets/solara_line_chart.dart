@@ -8,10 +8,14 @@ import '../util/flows/solara_plot_data.dart';
 class SolaraGraph extends StatelessWidget {
   const SolaraGraph({
     super.key,
+    this.xLabel = 'Time of Day',
+    this.yLabel = 'Watts',
     required this.plotData,
   });
 
   final SolaraPlotData plotData;
+  final String xLabel;
+  final String yLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,8 @@ class SolaraGraph extends StatelessWidget {
           height: MediaQuery.of(context).size.height * 0.6,
           child: _LineChart(
             key: const Key('_solaraLineChart'),
+            yLabel: yLabel,
+            xLabel: xLabel,
             plotData: plotData,
           ),
         ),
@@ -33,10 +39,14 @@ class SolaraGraph extends StatelessWidget {
 class _LineChart extends StatelessWidget {
   const _LineChart({
     super.key,
+    required this.xLabel,
+    required this.yLabel,
     required this.plotData,
   });
 
   final SolaraPlotData plotData;
+  final String xLabel;
+  final String yLabel;
 
   List<FlSpot> get _flSpots =>
       plotData.entries.map((entry) => FlSpot(entry.key, entry.value)).toList();
@@ -46,8 +56,8 @@ class _LineChart extends StatelessWidget {
     return LineChart(
       LineChartData(
         titlesData: FlTitlesData(
-          leftTitles: _LeftTitle.title,
-          bottomTitles: _BottomTitle.title,
+          leftTitles: _LeftTitle(yLabel).title,
+          bottomTitles: _BottomTitle(xLabel).title,
           topTitles: AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
@@ -66,10 +76,14 @@ class _LineChart extends StatelessWidget {
 }
 
 class _LeftTitle {
-  static AxisTitles get title => AxisTitles(
+  const _LeftTitle(this.label);
+
+  final String label;
+
+  AxisTitles get title => AxisTitles(
         axisNameSize: 24.0,
-        axisNameWidget: const Text(
-          'Watts',
+        axisNameWidget: Text(
+          label,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
         ),
         sideTitles: SideTitles(
@@ -83,9 +97,16 @@ class _LeftTitle {
 }
 
 class _BottomTitle {
-  static AxisTitles get title => AxisTitles(
-        axisNameWidget: const Text(
-          'Time of day',
+  const _BottomTitle(this.label);
+  final String label;
+
+  String _padDigit(int digit) {
+    return digit.toString().length == 1 ? '0$digit' : digit.toString();
+  }
+
+  AxisTitles get title => AxisTitles(
+        axisNameWidget: Text(
+          label,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
         ),
         axisNameSize: 24.0,
@@ -97,7 +118,8 @@ class _BottomTitle {
               angle: -math.pi / 4,
               child: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Text('${date.hour}:${date.minute}'),
+                child:
+                    Text('${_padDigit(date.hour)}:${_padDigit(date.minute)}'),
               ),
             );
           },
