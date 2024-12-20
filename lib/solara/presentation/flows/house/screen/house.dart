@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solara/core/presentation/util/flows/bloc/solara_unit_type.dart';
-import 'package:solara/core/presentation/util/flows/solara_plot_data.dart';
 
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
+import '../../../../../core/presentation/util/flows/bloc/solara_unit_type.dart';
+import '../../../../../core/presentation/util/flows/solara_plot_data.dart';
 import '../../../../../core/presentation/widgets/solara_circular_progress_indicator.dart';
 import '../../../../../core/presentation/widgets/solara_error.dart';
 import '../../../../../core/presentation/widgets/solara_line_chart.dart';
@@ -55,11 +55,6 @@ class SolaraDataVisualizer extends StatelessWidget {
 
   String get _date => '${date.year}/${date.month}/${date.day}';
 
-  bool get _showKilowatt => switch (unitType) {
-        SolaraUnitType.kilowatts => true,
-        SolaraUnitType.watts => false,
-      };
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -68,33 +63,56 @@ class SolaraDataVisualizer extends StatelessWidget {
         SolaraGraph(xLabel: _date, plotData: plotData),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Switch(
-                      value: _showKilowatt,
-                      onChanged: (showKilowatt) {
-                        context
-                            .read<HouseBloc>()
-                            .add(ToggleWatts(showKilowatt: showKilowatt));
-                      }),
-                  const Text('Toggle Wattage Unit'),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  context.read<HouseBloc>().add(
-                        Fetch(
-                          date: DateTime(2023, 03, 10),
-                        ),
-                      );
-                },
-                child: const Text('Select Date'),
-              ),
-            ],
+          child:
+              _BottomRow(key: const Key('solaraBottomRow'), unitType: unitType),
+        ),
+      ],
+    );
+  }
+}
+
+class _BottomRow extends StatelessWidget {
+  const _BottomRow({
+    super.key,
+    required this.unitType,
+  });
+
+  final SolaraUnitType unitType;
+
+  bool get _showKilowatt => switch (unitType) {
+        SolaraUnitType.kilowatts => true,
+        SolaraUnitType.watts => false,
+      };
+
+  void _onToggleUnit(bool showKilowatt, BuildContext context) {
+    context.read<HouseBloc>().add(ToggleWatts(showKilowatt: showKilowatt));
+  }
+
+  void _onDateChange(BuildContext context) {
+    context.read<HouseBloc>().add(
+          Fetch(
+            date: DateTime(2023, 03, 10),
           ),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Switch(
+              value: _showKilowatt,
+              onChanged: (showKilowatt) => _onToggleUnit(showKilowatt, context),
+            ),
+            const Text('Toggle Wattage Unit'),
+          ],
+        ),
+        ElevatedButton(
+          onPressed: () => _onDateChange(context),
+          child: const Text('Select Date'),
         ),
       ],
     );
