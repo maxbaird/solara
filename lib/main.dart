@@ -4,6 +4,7 @@ import 'core/presentation/widgets/solara_home.dart';
 import 'injection_container.dart' as dependency_injector;
 import 'solara/presentation/flows/battery/screen/battery.dart';
 import 'solara/presentation/flows/house/screen/house.dart';
+import 'solara/presentation/flows/solar/screen/solar.dart';
 
 void main() {
   dependency_injector.init();
@@ -34,7 +35,7 @@ class _Solara extends StatelessWidget {
     return SolaraHome(
       houseWidget: const House(),
       batteryWidget: const Battery(),
-      solarWidget: const Placeholder(),
+      solarWidget: const Solar(),
     );
   }
 }

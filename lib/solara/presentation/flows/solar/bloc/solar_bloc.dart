@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/params/fetch_params.dart';
-import '../../../../domain/usecases/battery_usecase.dart';
 
+import '../../../../../core/params/fetch_params.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_unit_type.dart';
 import '../../../../../core/presentation/util/flows/solara_plot_data.dart';
+import '../../../../domain/usecases/solar_usecase.dart';
 
-part 'battery_event.dart';
-part 'battery_state.dart';
+part 'solar_event.dart';
+part 'solar_state.dart';
 
-class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
-  BatteryBloc({required this.fetchBatteryUseCase})
-      : super(BatteryInitial(
+class SolarBloc extends Bloc<SolarEvent, SolarState> {
+  SolarBloc({required this.fetchSolarUseCase})
+      : super(SolarInitial(
           date: DateTime.now(),
           unitType: SolaraUnitType.watts,
           plotData: {},
@@ -22,26 +22,26 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
     on<ToggleWatts>(_onToggleWatts);
   }
 
-  final FetchBatteryUseCase fetchBatteryUseCase;
+  final FetchSolarUseCase fetchSolarUseCase;
 
-  Future<void> _onFetch(Fetch event, Emitter<BatteryState> emit) async {
+  Future<void> _onFetch(Fetch event, Emitter<SolarState> emit) async {
     emit(state.copyWith(blocStatus: SolaraBlocStatus.inProgress));
 
-    var (batteryEntities, err) =
-        await fetchBatteryUseCase.call(params: FetchParams(date: event.date));
+    var (solarEntities, err) =
+        await fetchSolarUseCase.call(params: FetchParams(date: event.date));
 
     if (err != null) {
       emit(state.copyWith(blocStatus: SolaraBlocStatus.failure));
       return;
     }
 
-    if (batteryEntities == null || batteryEntities.isEmpty) {
+    if (solarEntities == null || solarEntities.isEmpty) {
       emit(state.copyWith(blocStatus: SolaraBlocStatus.noData));
       return;
     }
 
     /// Filter away null dates and keep dates that exactly match [event.date]
-    batteryEntities = batteryEntities.where((e) {
+    solarEntities = solarEntities.where((e) {
       final DateTime? d = e.date;
       if (d != null) {
         return d.year == event.date.year &&
@@ -53,9 +53,9 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
 
     SolaraPlotData plotData = {};
 
-    for (var batteryEntity in batteryEntities) {
-      double? date = batteryEntity.date?.millisecondsSinceEpoch.toDouble();
-      double? watts = batteryEntity.watts?.toDouble();
+    for (var solarEntity in solarEntities) {
+      double? date = solarEntity.date?.millisecondsSinceEpoch.toDouble();
+      double? watts = solarEntity.watts?.toDouble();
 
       if (date != null && watts != null) {
         plotData[date] = watts;
@@ -71,7 +71,7 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
     );
   }
 
-  void _onToggleWatts(ToggleWatts event, Emitter<BatteryState> emit) {
+  void _onToggleWatts(ToggleWatts event, Emitter<SolarState> emit) {
     emit(state.copyWith(blocStatus: SolaraBlocStatus.inProgress));
     emit(
       state.copyWith(
