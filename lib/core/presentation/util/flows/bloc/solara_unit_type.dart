@@ -1,7 +1,7 @@
 enum SolaraUnitType {
-  watts('Watts'),
-  kilowatts('Kilowatts');
+  watts(''),
+  kilowatts('kW');
 
-  final String label;
-  const SolaraUnitType(this.label);
+  final String unit;
+  const SolaraUnitType(this.unit);
 }

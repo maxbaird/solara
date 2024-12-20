@@ -3,19 +3,22 @@ import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../util/flows/bloc/solara_unit_type.dart';
 import '../util/flows/solara_plot_data.dart';
 
 class SolaraGraph extends StatelessWidget {
   const SolaraGraph({
     super.key,
+    required this.plotData,
     this.xLabel = 'Time of Day',
     this.yLabel = 'Watts',
-    required this.plotData,
+    this.unitType = SolaraUnitType.watts,
   });
 
   final SolaraPlotData plotData;
   final String xLabel;
   final String yLabel;
+  final SolaraUnitType unitType;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +31,7 @@ class SolaraGraph extends StatelessWidget {
             key: const Key('_solaraLineChart'),
             yLabel: yLabel,
             xLabel: xLabel,
+            unitType: unitType,
             plotData: plotData,
           ),
         ),
@@ -41,12 +45,14 @@ class _LineChart extends StatelessWidget {
     super.key,
     required this.xLabel,
     required this.yLabel,
+    required this.unitType,
     required this.plotData,
   });
 
   final SolaraPlotData plotData;
   final String xLabel;
   final String yLabel;
+  final SolaraUnitType unitType;
 
   List<FlSpot> get _flSpots =>
       plotData.entries.map((entry) => FlSpot(entry.key, entry.value)).toList();
@@ -56,8 +62,8 @@ class _LineChart extends StatelessWidget {
     return LineChart(
       LineChartData(
         titlesData: FlTitlesData(
-          leftTitles: _LeftTitle(yLabel).title,
-          bottomTitles: _BottomTitle(xLabel).title,
+          leftTitles: _YAxisTitle(yLabel, unitType).title,
+          bottomTitles: _XAxisTitle(xLabel).title,
           topTitles: AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
@@ -75,10 +81,19 @@ class _LineChart extends StatelessWidget {
   }
 }
 
-class _LeftTitle {
-  const _LeftTitle(this.label);
+class _YAxisTitle {
+  const _YAxisTitle(
+    this.label,
+    this.unitType,
+  );
 
   final String label;
+  final SolaraUnitType unitType;
+
+  int get _divisor => switch (unitType) {
+        SolaraUnitType.watts => 1,
+        SolaraUnitType.kilowatts => 1000,
+      };
 
   AxisTitles get title => AxisTitles(
         axisNameSize: 24.0,
@@ -90,14 +105,14 @@ class _LeftTitle {
           reservedSize: 42,
           showTitles: true,
           getTitlesWidget: (value, _) {
-            return Text(value.toInt().toString());
+            return Text((value / _divisor).toInt().toString() + unitType.unit);
           },
         ),
       );
 }
 
-class _BottomTitle {
-  const _BottomTitle(this.label);
+class _XAxisTitle {
+  const _XAxisTitle(this.label);
   final String label;
 
   String _padDigit(int digit) {

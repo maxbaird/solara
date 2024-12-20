@@ -72,11 +72,13 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
   }
 
   void _onToggleWatts(ToggleWatts event, Emitter<HouseState> emit) {
+    emit(state.copyWith(blocStatus: SolaraBlocStatus.inProgress));
     emit(
       state.copyWith(
         unitType: event.showKilowatt
             ? SolaraUnitType.kilowatts
             : SolaraUnitType.watts,
+        blocStatus: SolaraBlocStatus.success,
       ),
     );
   }

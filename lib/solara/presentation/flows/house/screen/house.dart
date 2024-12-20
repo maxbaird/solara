@@ -60,7 +60,11 @@ class SolaraDataVisualizer extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SolaraGraph(xLabel: _date, plotData: plotData),
+        SolaraGraph(
+          xLabel: _date,
+          plotData: plotData,
+          unitType: unitType,
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child:
