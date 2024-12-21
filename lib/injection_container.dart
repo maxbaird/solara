@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:solara/solara/domain/usecases/clear_storage_usecase.dart';
 
 import 'core/constants/constants.dart';
 import 'core/util/repo_config.dart';
@@ -65,6 +66,10 @@ void init() {
 
   sl.registerLazySingleton<FetchSolarUseCase>(
     () => FetchSolarUseCase(sl()),
+  );
+
+  sl.registerLazySingleton<ClearStorageUseCase>(
+    () => ClearStorageUseCase(sl()),
   );
 
   sl.registerFactory<HouseBloc>(() => HouseBloc(fetchHouseUseCase: sl()));

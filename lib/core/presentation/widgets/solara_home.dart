@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solara/solara/domain/usecases/clear_storage_usecase.dart';
 
 import '../../../injection_container.dart';
 import '../../../solara/presentation/flows/battery/bloc/battery_bloc.dart'
@@ -49,6 +50,18 @@ class SolaraHome extends StatelessWidget {
           appBar: AppBar(
             title: SolaraTitle('Solara'),
             centerTitle: true,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    await sl<ClearStorageUseCase>().call(params: null);
+                  },
+                  label: const Text('Clear Cache'),
+                  icon: Icon(Icons.delete),
+                ),
+              )
+            ],
             bottom: TabBar(tabs: [
               Tab(
                 icon: Icon(Icons.house),
