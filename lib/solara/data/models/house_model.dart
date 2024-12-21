@@ -15,9 +15,9 @@ class HouseModel extends Equatable {
       : date = DateTime.parse(json['timestamp']),
         watts = json['value'];
 
-  HouseModel.fromEntity(HouseEntity battery)
-      : date = battery.date,
-        watts = battery.watts;
+  HouseModel.fromEntity(HouseEntity house)
+      : date = house.date,
+        watts = house.watts;
 
   Map<String, dynamic> toJson() => {
         'timestamp': date?.toIso8601String() ?? '',

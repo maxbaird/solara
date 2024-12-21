@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 import '../../domain/entities/solar.dart';
 
 class SolarModel extends Equatable {
@@ -13,6 +14,15 @@ class SolarModel extends Equatable {
   SolarModel.fromJson(Map<String, dynamic> json)
       : date = DateTime.parse(json['timestamp']),
         watts = json['value'];
+
+  SolarModel.fromEntity(SolarEntity solar)
+      : date = solar.date,
+        watts = solar.watts;
+
+  Map<String, dynamic> toJson() => {
+        'timestamp': date?.toIso8601String() ?? '',
+        'value': watts,
+      };
 
   SolarEntity toEntity() => SolarEntity(
         date: date,
