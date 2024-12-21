@@ -85,10 +85,10 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
 }
 
 abstract class BatteryRemoteDataSource {
-  BatteryRemoteDataSource(this.connection, this.endPoint);
+  BatteryRemoteDataSource(this.connection, this.path);
 
   final RepoConfig connection;
-  final String endPoint;
+  final String path;
 
   Uri uri = Uri();
 

@@ -85,10 +85,10 @@ class HouseRemoteDataSourceImpl extends HouseRemoteDataSource {
 }
 
 abstract class HouseRemoteDataSource {
-  HouseRemoteDataSource(this.connection, this.endPoint);
+  HouseRemoteDataSource(this.connection, this.path);
 
   final RepoConfig connection;
-  final String endPoint;
+  final String path;
 
   Uri uri = Uri();
 

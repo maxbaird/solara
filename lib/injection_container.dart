@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import 'core/constants/constants.dart';
 import 'core/util/repo_config.dart';
+import 'solara/data/datasources/battery_local_datasource.dart';
 import 'solara/data/datasources/battery_remote_datasource.dart';
 import 'solara/data/datasources/house_remote_datasource.dart';
 import 'solara/data/datasources/solar_remote_datasource.dart';
@@ -22,9 +23,9 @@ final GetIt sl = GetIt.instance;
 final RepoConfig solaraRepoConfig = RepoConfig(baseUrl: baseUrl);
 
 void init() {
-  sl.registerLazySingleton<BatteryRemoteDataSource>(
-    () => BatteryRemoteDataSourceImpl(solaraRepoConfig, '/monitoring'),
-  );
+  // sl.registerLazySingleton<BatteryRemoteDataSource>(
+  //   () => BatteryRemoteDataSourceImpl(solaraRepoConfig, '/monitoring'),
+  // );
 
   sl.registerLazySingleton<HouseRemoteDataSource>(
     () => HouseRemoteDataSourceImpl(solaraRepoConfig, '/monitoring'),
@@ -34,8 +35,16 @@ void init() {
     () => SolarRemoteDataSourceImpl(solaraRepoConfig, '/monitoring'),
   );
 
+  final BatteryLocalDatasource batteryLocalDatasource =
+      BatteryLocalDatasourceImpl(solaraRepoConfig);
+  final BatteryRemoteDataSource batteryRemoteDataSource =
+      BatteryRemoteDataSourceImpl(solaraRepoConfig, '/monitoring');
+
   sl.registerLazySingleton<BatteryRepo>(
-    () => BatteryRepoImpl(sl()),
+    () => BatteryRepoImpl(
+      batteryRemoteDataSource,
+      batteryLocalDatasource,
+    ),
   );
 
   sl.registerLazySingleton<HouseRepo>(

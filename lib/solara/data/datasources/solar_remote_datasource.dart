@@ -85,10 +85,10 @@ class SolarRemoteDataSourceImpl extends SolarRemoteDataSource {
 }
 
 abstract class SolarRemoteDataSource {
-  SolarRemoteDataSource(this.connection, this.endPoint);
+  SolarRemoteDataSource(this.connection, this.path);
 
   final RepoConfig connection;
-  final String endPoint;
+  final String path;
 
   Uri uri = Uri();
 

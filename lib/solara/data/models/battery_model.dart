@@ -14,6 +14,15 @@ class BatteryModel extends Equatable {
       : date = DateTime.parse(json['timestamp']),
         watts = json['value'];
 
+  BatteryModel.fromEntity(BatteryEntity battery)
+      : date = battery.date,
+        watts = battery.watts;
+
+  Map<String, dynamic> toJson() => {
+        'timestamp': date?.toIso8601String() ?? '',
+        'value': watts,
+      };
+
   BatteryEntity toEntity() => BatteryEntity(
         date: date,
         watts: watts,
