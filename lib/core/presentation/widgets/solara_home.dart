@@ -17,11 +17,15 @@ class SolaraHome extends StatelessWidget {
     required this.houseWidget,
     required this.batteryWidget,
     required this.solarWidget,
+    required this.clearStorageUseCase,
   });
 
   final Widget houseWidget;
   final Widget batteryWidget;
   final Widget solarWidget;
+  final ClearStorageUseCase clearStorageUseCase;
+
+  void _onClearCache() async => await clearStorageUseCase.call(params: null);
 
   @override
   Widget build(BuildContext context) {
@@ -43,47 +47,77 @@ class SolaraHome extends StatelessWidget {
           lazy: false,
         ),
       ],
-      child: DefaultTabController(
-        length: 3,
-        initialIndex: 0,
-        child: Scaffold(
-          appBar: AppBar(
-            title: SolaraTitle('Solara'),
-            centerTitle: true,
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    await sl<ClearStorageUseCase>().call(params: null);
-                  },
-                  label: const Text('Clear Cache'),
-                  icon: Icon(Icons.delete),
-                ),
-              )
-            ],
-            bottom: TabBar(tabs: [
-              Tab(
-                icon: Icon(Icons.house),
-                child: const Text('House'),
-              ),
-              Tab(
-                icon: Icon(Icons.battery_charging_full),
-                child: const Text('Battery'),
-              ),
-              Tab(
-                icon: Icon(Icons.solar_power_outlined),
-                child: const Text('Solar'),
-              )
-            ]),
+      child: _SolaraHome(
+        key: const Key('_solaraHome'),
+        houseWidget: houseWidget,
+        batteryWidget: batteryWidget,
+        solarWidget: solarWidget,
+        onClearCache: _onClearCache,
+      ),
+    );
+  }
+}
+
+class _SolaraHome extends StatelessWidget {
+  const _SolaraHome({
+    super.key,
+    required this.houseWidget,
+    required this.batteryWidget,
+    required this.solarWidget,
+    required this.onClearCache,
+  });
+
+  final Widget houseWidget;
+  final Widget batteryWidget;
+  final Widget solarWidget;
+  final void Function() onClearCache;
+
+  List<Widget> get _actions => [
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: ElevatedButton.icon(
+            onPressed: onClearCache,
+            label: const Text('Clear Cache'),
+            icon: Icon(Icons.delete),
           ),
-          body: TabBarView(
-            children: [
-              houseWidget,
-              batteryWidget,
-              solarWidget,
-            ],
+        )
+      ];
+
+  TabBar get _bottom => TabBar(
+        tabs: [
+          Tab(
+            icon: Icon(Icons.house),
+            child: const Text('House'),
           ),
+          Tab(
+            icon: Icon(Icons.battery_charging_full),
+            child: const Text('Battery'),
+          ),
+          Tab(
+            icon: Icon(Icons.solar_power_outlined),
+            child: const Text('Solar'),
+          )
+        ],
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: 3,
+      initialIndex: 0,
+      child: Scaffold(
+        appBar: AppBar(
+          title: SolaraTitle('Solara'),
+          centerTitle: true,
+          actions: _actions,
+          bottom: _bottom,
+        ),
+        body: TabBarView(
+          children: [
+            houseWidget,
+            batteryWidget,
+            solarWidget,
+          ],
         ),
       ),
     );

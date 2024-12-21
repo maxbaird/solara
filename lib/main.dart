@@ -37,6 +37,7 @@ class _Solara extends StatelessWidget {
       houseWidget: const House(),
       batteryWidget: const Battery(),
       solarWidget: const Solar(),
+      clearStorageUseCase: dependency_injector.sl(),
     );
   }
 }
