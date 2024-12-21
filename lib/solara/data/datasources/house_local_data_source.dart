@@ -3,10 +3,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/resources/http_error.dart';
 import '../../../core/util/logger.dart';
 import '../../../core/util/repo_config.dart';
-import '../models/battery_model.dart';
+import '../models/house_model.dart';
 
-class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
-  BatteryLocalDatasourceImpl(this.config, {String? cacheName}) {
+class HouseLocalDatasourceImpl implements HouseLocalDataSource {
+  HouseLocalDatasourceImpl(this.config, {String? cacheName}) {
     _cacheName = cacheName ?? runtimeType.toString();
   }
 
@@ -18,15 +18,15 @@ class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
   final _log = logger;
 
   @override
-  Future<(List<BatteryModel>?, HttpError?)> fetch({DateTime? date}) async {
+  Future<(List<HouseModel>?, HttpError?)> fetch({DateTime? date}) async {
     try {
       if (!await Hive.boxExists(_cacheName)) {
-        _log.w('Hive Box for BatteryDataSourceImpl not found');
+        _log.w('Hive Box for HouseDataSourceImpl not found');
         return (
           null,
           HttpError(
               type: HttpExceptionType.localStorage,
-              error: 'Cache for BatteryDataSourceImpl not found')
+              error: 'Cache for HouseDataSourceImpl not found')
         );
       }
 
@@ -34,20 +34,20 @@ class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
 
       final List<dynamic> resultItems = _cache!.values.toList();
 
-      List<BatteryModel> batteryModels = _filterByDate(resultItems, date);
+      List<HouseModel> houseModels = _filterByDate(resultItems, date);
 
       _log.i(
-          'Fetched ${batteryModels.length} from BatteryModelLocalDataSourceImpl cache');
+          'Fetched ${houseModels.length} from HouseModelLocalDataSourceImpl cache');
       await _closeStorage();
-      return (batteryModels, null);
+      return (houseModels, null);
     } catch (e) {
-      _log.e('Error fetching data from BatteryDataSourceImpl: $_cacheName: $e');
+      _log.e('Error fetching data from HouseDataSourceImpl: $_cacheName: $e');
       return (null, HttpError(error: e));
     }
   }
 
   @override
-  Future<bool> create(BatteryModel model) async {
+  Future<bool> create(HouseModel model) async {
     final String? key = model.date?.toIso8601String();
 
     if (key == null) {
@@ -70,7 +70,7 @@ class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
     await _openStorage();
     try {
       _cache?.clear();
-      _log.i('Cleared BatteryLocalDataSourceImpl local storage');
+      _log.i('Cleared HouseLocalDataSourceImpl local storage');
     } catch (e) {
       _log.e(e);
       rethrow;
@@ -93,16 +93,15 @@ class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
     return true;
   }
 
-  List<BatteryModel> _filterByDate(List<dynamic> resultItems, DateTime? date) {
+  List<HouseModel> _filterByDate(List<dynamic> resultItems, DateTime? date) {
     if (date == null) {
       return [];
     }
 
-    List<BatteryModel> batteryModels = [];
+    List<HouseModel> houseModels = [];
 
     for (var item in resultItems) {
-      BatteryModel model =
-          BatteryModel.fromJson(Map<String, dynamic>.from(item));
+      HouseModel model = HouseModel.fromJson(Map<String, dynamic>.from(item));
       DateTime? modelDate = model.date;
 
       if (modelDate == null) {
@@ -112,19 +111,19 @@ class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
       if (modelDate.year == date.year &&
           modelDate.month == date.month &&
           modelDate.day == date.day) {
-        batteryModels.add(model);
+        houseModels.add(model);
       }
     }
-    return batteryModels;
+    return houseModels;
   }
 }
 
-abstract class BatteryLocalDataSource {
-  Future<(List<BatteryModel>?, HttpError?)> fetch({
+abstract class HouseLocalDataSource {
+  Future<(List<HouseModel>?, HttpError?)> fetch({
     required DateTime? date,
   });
 
-  Future<bool> create(BatteryModel model);
+  Future<bool> create(HouseModel model);
 
   Future<void> clear();
 }

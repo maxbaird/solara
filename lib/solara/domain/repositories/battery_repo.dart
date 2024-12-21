@@ -10,7 +10,7 @@ abstract class BatteryRepo {
   );
 
   final BatteryRemoteDataSource batteryRemoteDataSource;
-  final BatteryLocalDatasource batteryLocalDataSource;
+  final BatteryLocalDataSource batteryLocalDataSource;
 
   Future<(List<BatteryEntity>?, HttpError?)> fetch({
     DateTime? date,
