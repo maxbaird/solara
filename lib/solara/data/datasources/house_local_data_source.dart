@@ -2,15 +2,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../core/resources/solara_io_error.dart';
 import '../../../core/util/logger.dart';
-import '../../../core/util/repo_config.dart';
 import '../models/house_model.dart';
 
 class HouseLocalDatasourceImpl implements HouseLocalDataSource {
-  HouseLocalDatasourceImpl(this.config, {String? cacheName}) {
+  HouseLocalDatasourceImpl({String? cacheName}) {
     _cacheName = cacheName ?? runtimeType.toString();
   }
-
-  final RepoConfig config;
 
   late final String _cacheName;
 

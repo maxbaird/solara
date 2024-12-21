@@ -27,7 +27,7 @@ final RepoConfig solaraRepoConfig = RepoConfig(baseUrl: baseUrl);
 
 void init() {
   final BatteryLocalDataSource batteryLocalDataSource =
-      BatteryLocalDatasourceImpl(solaraRepoConfig);
+      BatteryLocalDatasourceImpl();
   final BatteryRemoteDataSource batteryRemoteDataSource =
       BatteryRemoteDataSourceImpl(solaraRepoConfig, '/monitoring');
 
@@ -38,8 +38,7 @@ void init() {
     ),
   );
 
-  final HouseLocalDataSource houseLocalDataSource =
-      HouseLocalDatasourceImpl(solaraRepoConfig);
+  final HouseLocalDataSource houseLocalDataSource = HouseLocalDatasourceImpl();
   final HouseRemoteDataSource houseRemoteDataSource =
       HouseRemoteDataSourceImpl(solaraRepoConfig, '/monitoring');
 
@@ -50,8 +49,7 @@ void init() {
     ),
   );
 
-  final SolarLocalDataSource solarLocalDataSource =
-      SolarLocalDatasourceImpl(solaraRepoConfig);
+  final SolarLocalDataSource solarLocalDataSource = SolarLocalDatasourceImpl();
   final SolarRemoteDataSource solarRemoteDataSource =
       SolarRemoteDataSourceImpl(solaraRepoConfig, '/monitoring');
 
