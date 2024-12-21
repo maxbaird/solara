@@ -1,4 +1,4 @@
-import '../../../core/resources/solara_io_error.dart';
+import '../../../core/resources/solara_io_exception.dart';
 import '../../domain/entities/solar.dart';
 import '../../domain/repositories/solar_repo.dart';
 import '../models/solar_model.dart';
@@ -10,7 +10,8 @@ class SolarRepoImpl extends SolarRepo {
   );
 
   @override
-  Future<(List<SolarEntity>?, SolaraIOError?)> fetch({DateTime? date}) async {
+  Future<(List<SolarEntity>?, SolaraIOException?)> fetch(
+      {DateTime? date}) async {
     // Try fetching local first
     var (solarEntities, err) = await fetchLocal(date: date);
 
@@ -30,7 +31,7 @@ class SolarRepoImpl extends SolarRepo {
   }
 
   @override
-  Future<(List<SolarEntity>?, SolaraIOError?)> fetchRemote(
+  Future<(List<SolarEntity>?, SolaraIOException?)> fetchRemote(
       {DateTime? date}) async {
     var (solarEntities, err) = await solarRemoteDataSource.fetch(
       date: date,
@@ -40,7 +41,7 @@ class SolarRepoImpl extends SolarRepo {
   }
 
   @override
-  Future<(List<SolarEntity>?, SolaraIOError?)> fetchLocal(
+  Future<(List<SolarEntity>?, SolaraIOException?)> fetchLocal(
       {DateTime? date}) async {
     var (solarModels, err) = await solarLocalDataSource.fetch(date: date);
     return (_toEntityList(solarModels), err);

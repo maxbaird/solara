@@ -1,4 +1,4 @@
-import '../../../core/resources/solara_io_error.dart';
+import '../../../core/resources/solara_io_exception.dart';
 import '../../data/datasources/house_local_data_source.dart';
 import '../../data/datasources/house_remote_datasource.dart';
 import '../entities/house.dart';
@@ -12,15 +12,15 @@ abstract class HouseRepo {
   final HouseRemoteDataSource houseRemoteDataSource;
   final HouseLocalDataSource houseLocalDataSource;
 
-  Future<(List<HouseEntity>?, SolaraIOError?)> fetch({
+  Future<(List<HouseEntity>?, SolaraIOException?)> fetch({
     DateTime? date,
   });
 
-  Future<(List<HouseEntity>?, SolaraIOError?)> fetchRemote({
+  Future<(List<HouseEntity>?, SolaraIOException?)> fetchRemote({
     DateTime? date,
   });
 
-  Future<(List<HouseEntity>?, SolaraIOError?)> fetchLocal({
+  Future<(List<HouseEntity>?, SolaraIOException?)> fetchLocal({
     DateTime? date,
   });
 

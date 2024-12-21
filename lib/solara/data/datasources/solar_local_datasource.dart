@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../../core/resources/solara_io_error.dart';
+import '../../../core/resources/solara_io_exception.dart';
 import '../../../core/util/logger.dart';
 import '../models/solar_model.dart';
 
@@ -15,13 +15,14 @@ class SolarLocalDatasourceImpl implements SolarLocalDataSource {
   final _log = logger;
 
   @override
-  Future<(List<SolarModel>?, SolaraIOError?)> fetch({DateTime? date}) async {
+  Future<(List<SolarModel>?, SolaraIOException?)> fetch(
+      {DateTime? date}) async {
     try {
       if (!await Hive.boxExists(_cacheName)) {
         _log.w('Hive Box for SolarDataSourceImpl not found');
         return (
           null,
-          SolaraIOError(
+          SolaraIOException(
               type: IOExceptionType.localStorage,
               error: 'Cache for SolarDataSourceImpl not found')
         );
@@ -39,7 +40,7 @@ class SolarLocalDatasourceImpl implements SolarLocalDataSource {
       return (solarModels, null);
     } catch (e) {
       _log.e('Error fetching data from SolarDataSourceImpl: $_cacheName: $e');
-      return (null, SolaraIOError(error: e));
+      return (null, SolaraIOException(error: e));
     }
   }
 
@@ -116,7 +117,7 @@ class SolarLocalDatasourceImpl implements SolarLocalDataSource {
 }
 
 abstract class SolarLocalDataSource {
-  Future<(List<SolarModel>?, SolaraIOError?)> fetch({
+  Future<(List<SolarModel>?, SolaraIOException?)> fetch({
     required DateTime? date,
   });
 

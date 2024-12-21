@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 
-import '../../../core/resources/solara_io_error.dart';
+import '../../../core/resources/solara_io_exception.dart';
 import '../../../core/util/logger.dart';
 import '../../../core/util/repo_config.dart';
 import '../models/battery_model.dart';
@@ -18,7 +18,8 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
   final _log = logger;
 
   @override
-  Future<(List<BatteryModel>?, SolaraIOError?)> fetch({DateTime? date}) async {
+  Future<(List<BatteryModel>?, SolaraIOException?)> fetch(
+      {DateTime? date}) async {
     String endPointUrl = _url;
     final params = <String, String>{};
 
@@ -46,7 +47,7 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
       res = await connection.client.get(uri, headers: connection.dataHeader);
     } catch (e) {
       _log.e(e);
-      var err = SolaraIOError(error: e, response: res);
+      var err = SolaraIOException(error: e, response: res);
       return (null, err);
     }
 
@@ -56,7 +57,7 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
       Map<String, dynamic> responseErrorMap = json.decode(res.body);
       final errorData = responseErrorMap['data'];
 
-      var err = SolaraIOError(
+      var err = SolaraIOException(
         error: Exception(errorData),
         response: res,
         type: IOExceptionType.server,
@@ -76,7 +77,7 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
     } catch (e) {
       _log.e('Populating from Json failed with error: $e');
 
-      var err = SolaraIOError(
+      var err = SolaraIOException(
         error: e,
         response: res,
         type: IOExceptionType.conversion,
@@ -94,7 +95,7 @@ abstract class BatteryRemoteDataSource {
 
   Uri uri = Uri();
 
-  Future<(List<BatteryModel>?, SolaraIOError?)> fetch({
+  Future<(List<BatteryModel>?, SolaraIOException?)> fetch({
     DateTime? date,
   });
 }

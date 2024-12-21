@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:solara/core/resources/solara_io_error.dart';
+import 'package:solara/core/resources/solara_io_exception.dart';
 import 'package:solara/solara/data/datasources/battery_local_datasource.dart';
 import 'package:solara/solara/data/models/battery_model.dart';
 
@@ -47,8 +47,8 @@ void main() {
           await batteryLocalDataSourceImpl.fetch(date: DateTime.now());
       expect(results, isNull);
       expect(err, isNotNull);
-      expect(err is SolaraIOError, true);
-      err = err as SolaraIOError;
+      expect(err is SolaraIOException, true);
+      err = err as SolaraIOException;
       expect(err.type == IOExceptionType.localStorage, true);
     });
   });

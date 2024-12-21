@@ -1,4 +1,4 @@
-import '../../../core/resources/solara_io_error.dart';
+import '../../../core/resources/solara_io_exception.dart';
 import '../../data/datasources/solar_local_datasource.dart';
 import '../../data/datasources/solar_remote_datasource.dart';
 import '../entities/solar.dart';
@@ -12,15 +12,15 @@ abstract class SolarRepo {
   final SolarRemoteDataSource solarRemoteDataSource;
   final SolarLocalDataSource solarLocalDataSource;
 
-  Future<(List<SolarEntity>?, SolaraIOError?)> fetch({
+  Future<(List<SolarEntity>?, SolaraIOException?)> fetch({
     DateTime? date,
   });
 
-  Future<(List<SolarEntity>?, SolaraIOError?)> fetchRemote({
+  Future<(List<SolarEntity>?, SolaraIOException?)> fetchRemote({
     DateTime? date,
   });
 
-  Future<(List<SolarEntity>?, SolaraIOError?)> fetchLocal({
+  Future<(List<SolarEntity>?, SolaraIOException?)> fetchLocal({
     DateTime? date,
   });
 

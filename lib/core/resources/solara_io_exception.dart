@@ -8,8 +8,8 @@ enum IOExceptionType {
   conversion,
 }
 
-class SolaraIOError implements Exception {
-  SolaraIOError({
+class SolaraIOException implements Exception {
+  SolaraIOException({
     this.response,
     this.error,
     this.errorMap,
