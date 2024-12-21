@@ -126,7 +126,14 @@ class _XAxisTitle {
         ),
         axisNameSize: 24.0,
         sideTitles: SideTitles(
-          getTitlesWidget: (value, _) {
+          getTitlesWidget: (value, meta) {
+            // Avoids overlapping labels at start and end of axis.
+            if (value == meta.max) {
+              return const Text('');
+            } else if (value == meta.min) {
+              return const Text('');
+            }
+
             final DateTime date =
                 DateTime.fromMillisecondsSinceEpoch(value.toInt());
             return Transform.rotate(
