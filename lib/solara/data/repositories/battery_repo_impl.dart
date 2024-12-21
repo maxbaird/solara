@@ -1,4 +1,4 @@
-import '../../../core/resources/http_error.dart';
+import '../../../core/resources/solara_io_error.dart';
 import '../../domain/entities/battery.dart';
 import '../../domain/repositories/battery_repo.dart';
 import '../models/battery_model.dart';
@@ -10,7 +10,7 @@ class BatteryRepoImpl extends BatteryRepo {
   );
 
   @override
-  Future<(List<BatteryEntity>?, HttpError?)> fetch({DateTime? date}) async {
+  Future<(List<BatteryEntity>?, SolaraIOError?)> fetch({DateTime? date}) async {
     // Try fetching local first
     var (batteryEntities, err) = await fetchLocal(date: date);
 
@@ -30,7 +30,7 @@ class BatteryRepoImpl extends BatteryRepo {
   }
 
   @override
-  Future<(List<BatteryEntity>?, HttpError?)> fetchRemote(
+  Future<(List<BatteryEntity>?, SolaraIOError?)> fetchRemote(
       {DateTime? date}) async {
     var (batteryEntities, err) = await batteryRemoteDataSource.fetch(
       date: date,
@@ -40,7 +40,7 @@ class BatteryRepoImpl extends BatteryRepo {
   }
 
   @override
-  Future<(List<BatteryEntity>?, HttpError?)> fetchLocal(
+  Future<(List<BatteryEntity>?, SolaraIOError?)> fetchLocal(
       {DateTime? date}) async {
     var (batteryModels, err) = await batteryLocalDataSource.fetch(date: date);
     return (_toEntityList(batteryModels), err);

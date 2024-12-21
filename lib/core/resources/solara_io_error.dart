@@ -1,6 +1,6 @@
 import 'package:http/http.dart';
 
-enum HttpExceptionType {
+enum IOExceptionType {
   connectTimeout,
   server,
   localStorage,
@@ -8,15 +8,15 @@ enum HttpExceptionType {
   conversion,
 }
 
-class HttpError implements Exception {
-  HttpError({
+class SolaraIOError implements Exception {
+  SolaraIOError({
     this.response,
     this.error,
     this.errorMap,
-    this.type = HttpExceptionType.other,
+    this.type = IOExceptionType.other,
   });
 
-  HttpExceptionType type;
+  IOExceptionType type;
 
   Response? response;
 

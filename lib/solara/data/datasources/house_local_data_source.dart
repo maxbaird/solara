@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../../core/resources/http_error.dart';
+import '../../../core/resources/solara_io_error.dart';
 import '../../../core/util/logger.dart';
 import '../../../core/util/repo_config.dart';
 import '../models/house_model.dart';
@@ -18,14 +18,14 @@ class HouseLocalDatasourceImpl implements HouseLocalDataSource {
   final _log = logger;
 
   @override
-  Future<(List<HouseModel>?, HttpError?)> fetch({DateTime? date}) async {
+  Future<(List<HouseModel>?, SolaraIOError?)> fetch({DateTime? date}) async {
     try {
       if (!await Hive.boxExists(_cacheName)) {
         _log.w('Hive Box for HouseDataSourceImpl not found');
         return (
           null,
-          HttpError(
-              type: HttpExceptionType.localStorage,
+          SolaraIOError(
+              type: IOExceptionType.localStorage,
               error: 'Cache for HouseDataSourceImpl not found')
         );
       }
@@ -42,7 +42,7 @@ class HouseLocalDatasourceImpl implements HouseLocalDataSource {
       return (houseModels, null);
     } catch (e) {
       _log.e('Error fetching data from HouseDataSourceImpl: $_cacheName: $e');
-      return (null, HttpError(error: e));
+      return (null, SolaraIOError(error: e));
     }
   }
 
@@ -119,7 +119,7 @@ class HouseLocalDatasourceImpl implements HouseLocalDataSource {
 }
 
 abstract class HouseLocalDataSource {
-  Future<(List<HouseModel>?, HttpError?)> fetch({
+  Future<(List<HouseModel>?, SolaraIOError?)> fetch({
     required DateTime? date,
   });
 

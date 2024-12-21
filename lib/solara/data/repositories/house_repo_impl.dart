@@ -1,5 +1,5 @@
+import '../../../core/resources/solara_io_error.dart';
 import '../../domain/entities/house.dart';
-import '../../../core/resources/http_error.dart';
 import '../../domain/repositories/house_repo.dart';
 import '../models/house_model.dart';
 
@@ -10,7 +10,7 @@ class HouseRepoImpl extends HouseRepo {
   );
 
   @override
-  Future<(List<HouseEntity>?, HttpError?)> fetch({DateTime? date}) async {
+  Future<(List<HouseEntity>?, SolaraIOError?)> fetch({DateTime? date}) async {
     // Try fetching local first
     var (houseEntities, err) = await fetchLocal(date: date);
 
@@ -30,7 +30,8 @@ class HouseRepoImpl extends HouseRepo {
   }
 
   @override
-  Future<(List<HouseEntity>?, HttpError?)> fetchRemote({DateTime? date}) async {
+  Future<(List<HouseEntity>?, SolaraIOError?)> fetchRemote(
+      {DateTime? date}) async {
     var (houseEntities, err) = await houseRemoteDataSource.fetch(
       date: date,
     );
@@ -39,7 +40,8 @@ class HouseRepoImpl extends HouseRepo {
   }
 
   @override
-  Future<(List<HouseEntity>?, HttpError?)> fetchLocal({DateTime? date}) async {
+  Future<(List<HouseEntity>?, SolaraIOError?)> fetchLocal(
+      {DateTime? date}) async {
     var (houseModels, err) = await houseLocalDataSource.fetch(date: date);
     return (_toEntityList(houseModels), err);
   }

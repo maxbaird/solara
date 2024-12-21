@@ -1,8 +1,10 @@
 import 'dart:convert';
+
 import 'package:http/http.dart';
-import '../../../core/util/repo_config.dart';
-import '../../../core/resources/http_error.dart';
+
+import '../../../core/resources/solara_io_error.dart';
 import '../../../core/util/logger.dart';
+import '../../../core/util/repo_config.dart';
 import '../models/battery_model.dart';
 
 class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
@@ -16,7 +18,7 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
   final _log = logger;
 
   @override
-  Future<(List<BatteryModel>?, HttpError?)> fetch({DateTime? date}) async {
+  Future<(List<BatteryModel>?, SolaraIOError?)> fetch({DateTime? date}) async {
     String endPointUrl = _url;
     final params = <String, String>{};
 
@@ -44,7 +46,7 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
       res = await connection.client.get(uri, headers: connection.dataHeader);
     } catch (e) {
       _log.e(e);
-      var err = HttpError(error: e, response: res);
+      var err = SolaraIOError(error: e, response: res);
       return (null, err);
     }
 
@@ -54,10 +56,10 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
       Map<String, dynamic> responseErrorMap = json.decode(res.body);
       final errorData = responseErrorMap['data'];
 
-      var err = HttpError(
+      var err = SolaraIOError(
         error: Exception(errorData),
         response: res,
-        type: HttpExceptionType.server,
+        type: IOExceptionType.server,
       );
       return (null, err);
     }
@@ -74,10 +76,10 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
     } catch (e) {
       _log.e('Populating from Json failed with error: $e');
 
-      var err = HttpError(
+      var err = SolaraIOError(
         error: e,
         response: res,
-        type: HttpExceptionType.conversion,
+        type: IOExceptionType.conversion,
       );
       return (null, err);
     }
@@ -92,7 +94,7 @@ abstract class BatteryRemoteDataSource {
 
   Uri uri = Uri();
 
-  Future<(List<BatteryModel>?, HttpError?)> fetch({
+  Future<(List<BatteryModel>?, SolaraIOError?)> fetch({
     DateTime? date,
   });
 }
