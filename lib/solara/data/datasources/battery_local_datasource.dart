@@ -1,5 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:solara/core/resources/solara_io_exception.dart';
+import '../../../core/resources/solara_io_exception.dart';
 
 import '../../../core/util/logger.dart';
 import '../models/battery_model.dart';

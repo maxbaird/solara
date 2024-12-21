@@ -12,14 +12,13 @@ void main() {
   final BatteryLocalDatasourceImpl batteryLocalDataSourceImpl =
       BatteryLocalDatasourceImpl(cacheName: 'batteryLocalDataSourceImpl');
 
-  group('BatteryLocalDataSourceImpl', () {
+  group('BatteryLocalDataSourceImpl.fetch()', () {
     setUp(() async {
       await Hive.deleteFromDisk();
     });
 
     tearDown(() async {
       await batteryLocalDataSourceImpl.clear();
-      // await Hive.close();
     });
 
     test('batteryLocalDataSource fetch', () async {
@@ -37,7 +36,7 @@ void main() {
       expect(results.first == model, true);
     });
 
-    test('batteryLocalDataSource fetch box does not exist', () async {
+    test('batteryLocalDataSource fetch: box does not exist', () async {
       var (results, err) =
           await batteryLocalDataSourceImpl.fetch(date: DateTime.now());
       expect(results, isNull);
@@ -45,6 +44,54 @@ void main() {
       expect(err is SolaraIOException, true);
       err = err as SolaraIOException;
       expect(err.type == IOExceptionType.localStorage, true);
+    });
+
+    test(
+        'batteryLocalDataSource fetch: exception if hive box name is incorrect',
+        () async {
+      final BatteryLocalDatasourceImpl batteryLocalDataSourceImpl =
+          BatteryLocalDatasourceImpl(cacheName: 'invalid');
+
+      var (results, err) = await batteryLocalDataSourceImpl.fetch(
+          date: DateTime.parse('2024-12-21T20:56:00.467Z'));
+
+      expect(results, isNull);
+      expect(err, isNotNull);
+    });
+  });
+
+  group('BatteryLocalDataSource create', () {
+    setUp(() async {
+      await Hive.deleteFromDisk();
+    });
+
+    tearDown(() async {
+      await batteryLocalDataSourceImpl.clear();
+    });
+
+    test('Successfully creates entry', () async {
+      BatteryModel model = BatteryModel.fromJson(
+          {'timestamp': '2024-12-21T20:56:00.467Z', 'value': 3630});
+
+      bool result = await batteryLocalDataSourceImpl.create(model);
+      expect(result, true);
+    });
+
+    test('Does not put entry if timestamp/date is null', () async {
+      BatteryModel emptyModel = BatteryModel(date: null);
+
+      bool result = await batteryLocalDataSourceImpl.create(emptyModel);
+      expect(result, false);
+    });
+
+    test('Does not put entry it already exists', () async {
+      BatteryModel model = BatteryModel.fromJson(
+          {'timestamp': '2024-12-21T20:56:00.467Z', 'value': 3630});
+
+      await batteryLocalDataSourceImpl.create(model);
+      bool result = await batteryLocalDataSourceImpl.create(model);
+
+      expect(result, false);
     });
   });
 }
