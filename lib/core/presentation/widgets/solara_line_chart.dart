@@ -57,13 +57,21 @@ class _LineChart extends StatelessWidget {
   List<FlSpot> get _flSpots =>
       plotData.entries.map((entry) => FlSpot(entry.key, entry.value)).toList();
 
+  int get _itemCount => plotData.length;
+
   @override
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
         titlesData: FlTitlesData(
-          leftTitles: _YAxisTitle(yLabel, unitType).title,
-          bottomTitles: _XAxisTitle(xLabel).title,
+          leftTitles: _YAxisTitle(
+            label: yLabel,
+            unitType: unitType,
+          ).title,
+          bottomTitles: _XAxisTitle(
+            label: xLabel,
+            itemCount: _itemCount,
+          ).title,
           topTitles: AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
@@ -82,10 +90,10 @@ class _LineChart extends StatelessWidget {
 }
 
 class _YAxisTitle {
-  const _YAxisTitle(
-    this.label,
-    this.unitType,
-  );
+  const _YAxisTitle({
+    required this.label,
+    required this.unitType,
+  });
 
   final String label;
   final SolaraUnitType unitType;
@@ -112,8 +120,13 @@ class _YAxisTitle {
 }
 
 class _XAxisTitle {
-  const _XAxisTitle(this.label);
+  const _XAxisTitle({
+    required this.label,
+    required this.itemCount,
+  });
+
   final String label;
+  final int itemCount;
 
   String _padDigit(int digit) {
     return digit.toString().length == 1 ? '0$digit' : digit.toString();
@@ -147,7 +160,7 @@ class _XAxisTitle {
           },
           reservedSize: 40,
           showTitles: true,
-          interval: 287.0 * Duration.millisecondsPerMinute,
+          interval: (itemCount * Duration.millisecondsPerMinute).toDouble(),
         ),
       );
 }
