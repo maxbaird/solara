@@ -75,7 +75,11 @@ void init() {
   );
 
   sl.registerLazySingleton<ClearStorageUseCase>(
-    () => ClearStorageUseCase(sl()),
+    () => ClearStorageUseCase(
+      sl(),
+      sl(),
+      sl(),
+    ),
   );
 
   sl.registerFactory<HouseBloc>(() => HouseBloc(fetchHouseUseCase: sl()));
