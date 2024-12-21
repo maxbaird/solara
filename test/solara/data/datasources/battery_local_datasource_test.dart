@@ -2,14 +2,9 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:solara/core/resources/solara_io_exception.dart';
 import 'package:solara/solara/data/datasources/battery_local_datasource.dart';
 import 'package:solara/solara/data/models/battery_model.dart';
-
-class MockHiveInterface extends Mock implements HiveInterface {}
-
-class MockBox extends Mock implements Box {}
 
 void main() {
   var path = Directory.current.path;
