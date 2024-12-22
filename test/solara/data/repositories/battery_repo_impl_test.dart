@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:solara/core/resources/solara_io_exception.dart';
 import 'package:solara/solara/data/datasources/battery_local_datasource.dart';
 import 'package:solara/solara/data/datasources/battery_remote_datasource.dart';
 import 'package:solara/solara/data/models/battery_model.dart';
@@ -114,6 +115,21 @@ void main() {
 
       verify(() => mockBatteryLocalDataSource.create(any()))
           .called(remoteBatteryModels.length);
+    });
+
+    test('Remote fetch fails', () async {
+      when(() => mockBatteryLocalDataSource.fetch(date: any(named: 'date')))
+          .thenAnswer((_) => Future.value((null, null)));
+
+      when(() => mockBatteryRemoteDataSource.fetch(date: any(named: 'date')))
+          .thenAnswer((_) => Future.value(
+              (null, SolaraIOException(type: IOExceptionType.other))));
+
+      var (result, err) = await batteryRepoImpl.fetch(date: DateTime.now());
+
+      expect(result, isNotNull);
+      expect(result!.isEmpty, true);
+      expect(err is SolaraIOException, true);
     });
   });
 }
