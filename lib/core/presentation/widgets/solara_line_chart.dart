@@ -6,7 +6,11 @@ import 'package:flutter/material.dart';
 import '../util/flows/bloc/solara_unit_type.dart';
 import '../util/flows/solara_plot_data.dart';
 
+/// A widget to display a line chart.
 class SolaraGraph extends StatelessWidget {
+  /// Creates a widget that displays a line chart.
+  ///
+  /// Line chart is created from [plotData].
   const SolaraGraph({
     super.key,
     required this.plotData,
@@ -15,9 +19,24 @@ class SolaraGraph extends StatelessWidget {
     this.unitType = SolaraUnitType.watts,
   });
 
+  /// {@template solara.widgets.solarGraph.plotData}
+  /// The data used to plot the line chart.
+  /// {@endtemplate}
   final SolaraPlotData plotData;
+
+  /// {@template solara.widgets.solarGraph.xLabel}
+  /// The title for the x-axis.
+  /// {@endtemplate}
   final String xLabel;
+
+  /// {@template solara.widgets.solarGraph.yLabel}
+  /// The title for the y-axis.
+  /// {@endtemplate}
   final String yLabel;
+
+  /// {@template solara.widgets.solarGraph.unitType}
+  /// The type of units used for the y-axis tics.
+  /// {@endtemplate}
   final SolaraUnitType unitType;
 
   @override
@@ -40,6 +59,7 @@ class SolaraGraph extends StatelessWidget {
   }
 }
 
+/// A widget that displays a line chart.
 class _LineChart extends StatelessWidget {
   const _LineChart({
     super.key,
@@ -49,14 +69,25 @@ class _LineChart extends StatelessWidget {
     required this.plotData,
   });
 
+  /// {@macro solara.widgets.solarGraph.plotData}
   final SolaraPlotData plotData;
+
+  /// {@macro solara.widgets.solarGraph.xLabel}
   final String xLabel;
+
+  /// {@macro solara.widgets.solarGraph.yLabel}
   final String yLabel;
+
+  /// {@macro solara.widgets.solarGraph.unitType}
   final SolaraUnitType unitType;
 
+  /// Converts [plotData] into a list of [FlSpot] needed by [LineChart].
   List<FlSpot> get _flSpots =>
       plotData.entries.map((entry) => FlSpot(entry.key, entry.value)).toList();
 
+  /// {@template solara.widgets._lineChart._itemCount}
+  /// A count of how many data points to plot.
+  /// {@endtemplate}
   int get _itemCount => plotData.length;
 
   @override
@@ -89,20 +120,27 @@ class _LineChart extends StatelessWidget {
   }
 }
 
+/// Holds the display configuration for the y-axis title and tics.
 class _YAxisTitle {
   const _YAxisTitle({
     required this.label,
     required this.unitType,
   });
 
+  /// The label for the axis.
   final String label;
+
+  /// What unit type should be used for the tics.
   final SolaraUnitType unitType;
 
+  /// Returns the divisor to use when converting tics between watts and
+  /// kilowatts.
   int get _divisor => switch (unitType) {
         SolaraUnitType.watts => 1,
         SolaraUnitType.kilowatts => 1000,
       };
 
+  /// Gets the formatting for the axis title and tics.
   AxisTitles get title => AxisTitles(
         axisNameSize: 24.0,
         axisNameWidget: Text(
@@ -119,19 +157,25 @@ class _YAxisTitle {
       );
 }
 
+/// Holds the display configuration for the x-axis title and tics.
 class _XAxisTitle {
   const _XAxisTitle({
     required this.label,
     required this.itemCount,
   });
 
+  /// The label for the axis.
   final String label;
+
+  /// {@macro solara.widgets._lineChart._itemCount}
   final int itemCount;
 
+  /// Prefixes a widget with a 0 if it is a single digit.
   String _padDigit(int digit) {
     return digit.toString().length == 1 ? '0$digit' : digit.toString();
   }
 
+  /// Returns the title and tic configuration for the axis.
   AxisTitles get title => AxisTitles(
         axisNameWidget: Text(
           label,
@@ -149,6 +193,7 @@ class _XAxisTitle {
 
             final DateTime date =
                 DateTime.fromMillisecondsSinceEpoch(value.toInt());
+            // Return rotated tics to avoid overlapping
             return Transform.rotate(
               angle: -math.pi / 4,
               child: Padding(
