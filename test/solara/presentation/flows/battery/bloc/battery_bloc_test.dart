@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:solara/core/params/fetch_params.dart';
@@ -86,6 +87,15 @@ void main() {
             ],
         verify: (bloc) {
           expect(bloc.state.plotData.length, plotData.length);
+
+          // Compare values; there is a loss of precision when comparing the dates
+          // after being converted to milliseconds.
+          for (int i = 0; i != plotData.length; ++i) {
+            expect(
+                bloc.state.plotData.values.elementAt(i) ==
+                    plotData.values.elementAt(i),
+                true);
+          }
         });
 
     blocTest('Filters battery entities outside of specified date',
@@ -115,6 +125,15 @@ void main() {
             ],
         verify: (bloc) {
           expect(bloc.state.plotData.length, batteryEntities.length - 1);
+
+          // Compare values; there is a loss of precision when comparing the dates
+          // after being converted to milliseconds.
+          for (int i = 0; i != plotData.length; ++i) {
+            expect(
+                bloc.state.plotData.values.elementAt(i) ==
+                    plotData.values.elementAt(i),
+                true);
+          }
         });
 
     blocTest(
