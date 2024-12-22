@@ -10,6 +10,7 @@ import '../../../../domain/usecases/house_usecase.dart';
 part 'house_event.dart';
 part 'house_state.dart';
 
+/// The bloc for managing the state of house tab on the UI.
 class HouseBloc extends Bloc<HouseEvent, HouseState> {
   HouseBloc({required this.fetchHouseUseCase})
       : super(HouseInitial(
@@ -22,10 +23,14 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
           plotData: {},
           blocStatus: SolaraBlocStatus.initial,
         )) {
+    /// Register a method to fetch chart data.
     on<Fetch>(_onFetch);
+
+    /// Register a method to toggle the wattage units.
     on<ToggleWatts>(_onToggleWatts);
   }
 
+  /// The use case to invoke to fetch chart data.
   final FetchHouseUseCase fetchHouseUseCase;
 
   Future<void> _onFetch(Fetch event, Emitter<HouseState> emit) async {
@@ -35,11 +40,13 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
         await fetchHouseUseCase.call(params: FetchParams(date: event.date));
 
     if (err != null) {
+      /// Error when fetching.
       emit(state.copyWith(blocStatus: SolaraBlocStatus.failure));
       return;
     }
 
     if (houseEntities == null || houseEntities.isEmpty) {
+      /// Found no data.
       emit(state.copyWith(blocStatus: SolaraBlocStatus.noData));
       return;
     }
@@ -57,6 +64,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
 
     SolaraPlotData plotData = {};
 
+    /// Populate [plotData] with data from filtered [houseEntities].
     for (var houseEntity in houseEntities) {
       double? date = houseEntity.date?.millisecondsSinceEpoch.toDouble();
       double? watts = houseEntity.watts?.toDouble();
@@ -66,6 +74,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
       }
     }
 
+    /// Emit a success state.
     emit(
       state.copyWith(
         plotData: plotData,
