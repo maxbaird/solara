@@ -5,6 +5,7 @@ import 'package:solara/core/params/fetch_params.dart';
 import 'package:solara/core/presentation/util/flows/bloc/solara_bloc_status.dart';
 import 'package:solara/core/presentation/util/flows/bloc/solara_unit_type.dart';
 import 'package:solara/core/presentation/util/flows/solara_plot_data.dart';
+import 'package:solara/core/resources/solara_io_exception.dart';
 import 'package:solara/solara/domain/entities/battery.dart';
 import 'package:solara/solara/domain/usecases/battery_usecase.dart';
 import 'package:solara/solara/presentation/flows/battery/bloc/battery_bloc.dart';
@@ -55,7 +56,7 @@ void main() {
     registerFallbackValue(FetchParams());
   });
 
-  group('BatteryBloc', () {
+  group('BatteryBloc: fetch', () {
     dynamic act(BatteryBloc bloc) => bloc.add(Fetch(date: date));
 
     blocTest('Fetches battery entities',
@@ -115,5 +116,29 @@ void main() {
         verify: (bloc) {
           expect(bloc.state.plotData.length, batteryEntities.length - 1);
         });
+
+    blocTest(
+      'Emits failure if usecase returns error',
+      build: build,
+      setUp: () {
+        when(() => mockFetchBatteryUseCase.call(params: any(named: 'params')))
+            .thenAnswer((_) async => (null, SolaraIOException()));
+      },
+      act: act,
+      verify: (bloc) =>
+          expect(bloc.state.blocStatus == SolaraBlocStatus.failure, true),
+    );
+
+    blocTest(
+      'handles no results',
+      build: build,
+      setUp: () {
+        when(() => mockFetchBatteryUseCase.call(params: any(named: 'params')))
+            .thenAnswer((_) async => (<BatteryEntity>[], null));
+      },
+      act: act,
+      verify: (bloc) =>
+          expect(bloc.state.blocStatus == SolaraBlocStatus.noData, true),
+    );
   });
 }
