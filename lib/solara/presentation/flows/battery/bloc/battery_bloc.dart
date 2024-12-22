@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/params/fetch_params.dart';
-import '../../../../domain/usecases/battery_usecase.dart';
 
+import '../../../../../core/params/fetch_params.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_unit_type.dart';
 import '../../../../../core/presentation/util/flows/solara_plot_data.dart';
+import '../../../../domain/usecases/battery_usecase.dart';
 
 part 'battery_event.dart';
 part 'battery_state.dart';
@@ -13,7 +13,11 @@ part 'battery_state.dart';
 class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
   BatteryBloc({required this.fetchBatteryUseCase})
       : super(BatteryInitial(
-          date: DateTime.now(),
+          date: DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+          ),
           unitType: SolaraUnitType.watts,
           plotData: {},
           blocStatus: SolaraBlocStatus.initial,

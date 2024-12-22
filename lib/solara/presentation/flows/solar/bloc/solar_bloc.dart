@@ -13,7 +13,11 @@ part 'solar_state.dart';
 class SolarBloc extends Bloc<SolarEvent, SolarState> {
   SolarBloc({required this.fetchSolarUseCase})
       : super(SolarInitial(
-          date: DateTime.now(),
+          date: DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+          ),
           unitType: SolaraUnitType.watts,
           plotData: {},
           blocStatus: SolaraBlocStatus.initial,
