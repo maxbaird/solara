@@ -4,11 +4,13 @@ import '../../../core/use_case/use_case.dart';
 import '../entities/battery.dart';
 import '../repositories/battery_repo.dart';
 
+/// The use case for fetching battery entities.
 class FetchBatteryUseCase
     implements
         UseCase<(List<BatteryEntity>?, SolaraIOException?), FetchParams> {
   const FetchBatteryUseCase(this._batteryRepo);
 
+  /// The repository used for the fetch.
   final BatteryRepo _batteryRepo;
 
   @override

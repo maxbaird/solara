@@ -4,10 +4,12 @@ import '../../../core/use_case/use_case.dart';
 import '../entities/house.dart';
 import '../repositories/house_repo.dart';
 
+/// The use case for fetching house entities.
 class FetchHouseUseCase
     implements UseCase<(List<HouseEntity>?, SolaraIOException?), FetchParams> {
   const FetchHouseUseCase(this._houseRepo);
 
+  /// The repository used for the fetch.
   final HouseRepo _houseRepo;
 
   @override
