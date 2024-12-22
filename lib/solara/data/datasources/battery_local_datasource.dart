@@ -1,16 +1,19 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import '../../../core/resources/solara_io_exception.dart';
 
+import '../../../core/resources/solara_io_exception.dart';
 import '../../../core/util/logger.dart';
 import '../models/battery_model.dart';
 
+/// The local data source for caching battery data.
 class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
   BatteryLocalDatasourceImpl({String? cacheName}) {
     _cacheName = cacheName ?? runtimeType.toString();
   }
 
+  /// The name of the data cache.
   late final String _cacheName;
 
+  /// The container used for the cache.
   Box<dynamic>? _cache;
   final _log = logger;
 
@@ -32,6 +35,7 @@ class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
 
       final List<dynamic> resultItems = _cache!.values.toList();
 
+      /// Filter any data that is not associated with [date].
       List<BatteryModel> batteryModels = _filterByDate(resultItems, date);
 
       _log.i(
@@ -54,6 +58,7 @@ class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
 
     await _openStorage();
 
+    /// Don't write to cache if data for [key] already exists.
     if (_cache!.containsKey(key)) {
       return false;
     }
@@ -91,6 +96,10 @@ class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
     return true;
   }
 
+  /// Data fetched from the API can sometimes contain data from
+  /// dates not requested.
+  ///
+  /// This function ensures that only data matching [date] is returned..
   List<BatteryModel> _filterByDate(List<dynamic> resultItems, DateTime? date) {
     if (date == null) {
       return [];
@@ -118,11 +127,18 @@ class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
 }
 
 abstract class BatteryLocalDataSource {
+  /// The fetch operation.
+  ///
+  /// Returns all cached data matching [date].
   Future<(List<BatteryModel>?, SolaraIOException?)> fetch({
     required DateTime? date,
   });
 
+  /// The create operation.
+  ///
+  /// Writes [model] to cache.
   Future<bool> create(BatteryModel model);
 
+  /// Clears all data written to cache.
   Future<void> clear();
 }
