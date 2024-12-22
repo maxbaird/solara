@@ -25,6 +25,8 @@ import 'solara/presentation/flows/house/bloc/house_bloc.dart';
 import 'solara/presentation/flows/solar/bloc/solar_bloc.dart';
 
 final GetIt sl = GetIt.instance;
+
+/// Holds the connection information for the remote repositories.
 final RepoConfig solaraRepoConfig = RepoConfig(
   baseUrl: baseUrl,
   client: RetryClient(http.Client()),
