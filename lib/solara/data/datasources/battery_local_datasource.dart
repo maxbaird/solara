@@ -5,8 +5,8 @@ import '../../../core/util/logger.dart';
 import '../models/battery_model.dart';
 
 /// The local data source for caching battery data.
-class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
-  BatteryLocalDatasourceImpl({String? cacheName}) {
+class BatteryLocalDataSourceImpl implements BatteryLocalDataSource {
+  BatteryLocalDataSourceImpl({String? cacheName}) {
     _cacheName = cacheName ?? runtimeType.toString();
   }
 

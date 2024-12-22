@@ -5,8 +5,8 @@ import '../../../core/util/logger.dart';
 import '../models/house_model.dart';
 
 /// The local data source for caching house data.
-class HouseLocalDatasourceImpl implements HouseLocalDataSource {
-  HouseLocalDatasourceImpl({String? cacheName}) {
+class HouseLocalDataSourceImpl implements HouseLocalDataSource {
+  HouseLocalDataSourceImpl({String? cacheName}) {
     _cacheName = cacheName ?? runtimeType.toString();
   }
 

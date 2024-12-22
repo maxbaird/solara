@@ -5,8 +5,8 @@ import '../../../core/util/logger.dart';
 import '../models/solar_model.dart';
 
 /// The local data source for caching solar data.
-class SolarLocalDatasourceImpl implements SolarLocalDataSource {
-  SolarLocalDatasourceImpl({String? cacheName}) {
+class SolarLocalDataSourceImpl implements SolarLocalDataSource {
+  SolarLocalDataSourceImpl({String? cacheName}) {
     _cacheName = cacheName ?? runtimeType.toString();
   }
 

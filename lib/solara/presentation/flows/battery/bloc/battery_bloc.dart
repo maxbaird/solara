@@ -10,6 +10,7 @@ import '../../../../domain/usecases/battery_usecase.dart';
 part 'battery_event.dart';
 part 'battery_state.dart';
 
+/// The bloc for managing the state of battery tab on the UI.
 class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
   BatteryBloc({required this.fetchBatteryUseCase})
       : super(BatteryInitial(
@@ -22,10 +23,14 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
           plotData: {},
           blocStatus: SolaraBlocStatus.initial,
         )) {
+    /// Register a method to fetch chart data.
     on<Fetch>(_onFetch);
+
+    /// Register a method to toggle the wattage units.
     on<ToggleWatts>(_onToggleWatts);
   }
 
+  /// The use case to invoke to fetch chart data.
   final FetchBatteryUseCase fetchBatteryUseCase;
 
   Future<void> _onFetch(Fetch event, Emitter<BatteryState> emit) async {
@@ -35,11 +40,13 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
         await fetchBatteryUseCase.call(params: FetchParams(date: event.date));
 
     if (err != null) {
+      /// Error when fetching.
       emit(state.copyWith(blocStatus: SolaraBlocStatus.failure));
       return;
     }
 
     if (batteryEntities == null || batteryEntities.isEmpty) {
+      /// Found no data.
       emit(state.copyWith(blocStatus: SolaraBlocStatus.noData));
       return;
     }
@@ -57,6 +64,7 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
 
     SolaraPlotData plotData = {};
 
+    /// Populate [plotData] with data from filtered [batteryEntities].
     for (var batteryEntity in batteryEntities) {
       double? date = batteryEntity.date?.millisecondsSinceEpoch.toDouble();
       double? watts = batteryEntity.watts?.toDouble();
@@ -65,6 +73,7 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
       }
     }
 
+    /// Emit a success state.
     emit(
       state.copyWith(
         plotData: plotData,

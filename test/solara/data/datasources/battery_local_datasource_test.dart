@@ -9,8 +9,8 @@ import 'package:solara/solara/data/models/battery_model.dart';
 void main() {
   var path = Directory.current.path;
   Hive.init('$path/test/hive_testing_path');
-  final BatteryLocalDatasourceImpl batteryLocalDataSourceImpl =
-      BatteryLocalDatasourceImpl(cacheName: 'batteryLocalDataSourceImpl');
+  final BatteryLocalDataSourceImpl batteryLocalDataSourceImpl =
+      BatteryLocalDataSourceImpl(cacheName: 'batteryLocalDataSourceImpl');
 
   group('BatteryLocalDataSourceImpl.fetch()', () {
     setUp(() async {
@@ -49,8 +49,8 @@ void main() {
     test(
         'batteryLocalDataSource fetch: exception if hive box name is incorrect',
         () async {
-      final BatteryLocalDatasourceImpl batteryLocalDataSourceImpl =
-          BatteryLocalDatasourceImpl(cacheName: 'invalid');
+      final BatteryLocalDataSourceImpl batteryLocalDataSourceImpl =
+          BatteryLocalDataSourceImpl(cacheName: 'invalid');
 
       var (results, err) = await batteryLocalDataSourceImpl.fetch(
           date: DateTime.parse('2024-12-21T20:56:00.467Z'));

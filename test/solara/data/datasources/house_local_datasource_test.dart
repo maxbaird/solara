@@ -9,8 +9,8 @@ import 'package:solara/solara/data/models/house_model.dart';
 void main() {
   var path = Directory.current.path;
   Hive.init('$path/test/hive_testing_path');
-  final HouseLocalDatasourceImpl houseLocalDataSourceImpl =
-      HouseLocalDatasourceImpl(cacheName: 'houseLocalDataSourceImpl');
+  final HouseLocalDataSourceImpl houseLocalDataSourceImpl =
+      HouseLocalDataSourceImpl(cacheName: 'houseLocalDataSourceImpl');
 
   group('HouseLocalDataSourceImpl.fetch()', () {
     setUp(() async {
@@ -48,8 +48,8 @@ void main() {
 
     test('houseLocalDataSource fetch: exception if hive box name is incorrect',
         () async {
-      final HouseLocalDatasourceImpl houseLocalDataSourceImpl =
-          HouseLocalDatasourceImpl(cacheName: 'invalid');
+      final HouseLocalDataSourceImpl houseLocalDataSourceImpl =
+          HouseLocalDataSourceImpl(cacheName: 'invalid');
 
       var (results, err) = await houseLocalDataSourceImpl.fetch(
           date: DateTime.parse('2024-12-21T20:56:00.467Z'));

@@ -9,8 +9,8 @@ import 'package:solara/solara/data/models/solar_model.dart';
 void main() {
   var path = Directory.current.path;
   Hive.init('$path/test/hive_testing_path');
-  final SolarLocalDatasourceImpl solarLocalDataSourceImpl =
-      SolarLocalDatasourceImpl(cacheName: 'solarLocalDataSourceImpl');
+  final SolarLocalDataSourceImpl solarLocalDataSourceImpl =
+      SolarLocalDataSourceImpl(cacheName: 'solarLocalDataSourceImpl');
 
   group('SolarLocalDataSourceImpl.fetch()', () {
     setUp(() async {
@@ -48,8 +48,8 @@ void main() {
 
     test('solarLocalDataSource fetch: exception if hive box name is incorrect',
         () async {
-      final SolarLocalDatasourceImpl solarLocalDataSourceImpl =
-          SolarLocalDatasourceImpl(cacheName: 'invalid');
+      final SolarLocalDataSourceImpl solarLocalDataSourceImpl =
+          SolarLocalDataSourceImpl(cacheName: 'invalid');
 
       var (results, err) = await solarLocalDataSourceImpl.fetch(
           date: DateTime.parse('2024-12-21T20:56:00.467Z'));
