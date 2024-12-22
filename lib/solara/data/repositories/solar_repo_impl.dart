@@ -3,6 +3,16 @@ import '../../domain/entities/solar.dart';
 import '../../domain/repositories/solar_repo.dart';
 import '../models/solar_model.dart';
 
+/// This class is a concrete implementation for [SolarRepo].
+///
+/// [SolarRepoImpl] provides implementations for the abstract operations
+/// defined in [SolarRepo]. [SolarRepo] is defined abstractly in the domain
+/// layer of the application and its implementation resides here in the data
+/// layer. The idea that data repositories should plug in to the domain layer.
+///
+/// This way, the concrete implementation of where/how the data is retrieved
+/// will not affect the rest of the application as long as it adheres to the
+/// [SolarRepo] interface.
 class SolarRepoImpl extends SolarRepo {
   const SolarRepoImpl(
     super.solarRemoteDataSource,
@@ -33,11 +43,11 @@ class SolarRepoImpl extends SolarRepo {
   @override
   Future<(List<SolarEntity>?, SolaraIOException?)> fetchRemote(
       {DateTime? date}) async {
-    var (solarEntities, err) = await solarRemoteDataSource.fetch(
+    var (solarModels, err) = await solarRemoteDataSource.fetch(
       date: date,
     );
 
-    return (_toEntityList(solarEntities), err);
+    return (_toEntityList(solarModels), err);
   }
 
   @override
@@ -57,6 +67,7 @@ class SolarRepoImpl extends SolarRepo {
     return solarLocalDataSource.clear();
   }
 
+  /// Converts a list of models to a list of entities.
   List<SolarEntity> _toEntityList(List<SolarModel>? models) {
     List<SolarEntity> entities = [];
 

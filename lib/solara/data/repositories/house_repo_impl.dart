@@ -3,6 +3,16 @@ import '../../domain/entities/house.dart';
 import '../../domain/repositories/house_repo.dart';
 import '../models/house_model.dart';
 
+/// This class is a concrete implementation for [HouseRepo].
+///
+/// [HouseRepoImpl] provides implementations for the abstract operations
+/// defined in [HouseRepo]. [HouseRepo] is defined abstractly in the domain
+/// layer of the application and its implementation resides here in the data
+/// layer. The idea that data repositories should plug in to the domain layer.
+///
+/// This way, the concrete implementation of where/how the data is retrieved
+/// will not affect the rest of the application as long as it adheres to the
+/// [HouseRepo] interface.
 class HouseRepoImpl extends HouseRepo {
   const HouseRepoImpl(
     super.houseRemoteDataSource,
@@ -33,11 +43,11 @@ class HouseRepoImpl extends HouseRepo {
   @override
   Future<(List<HouseEntity>?, SolaraIOException?)> fetchRemote(
       {DateTime? date}) async {
-    var (houseEntities, err) = await houseRemoteDataSource.fetch(
+    var (houseModels, err) = await houseRemoteDataSource.fetch(
       date: date,
     );
 
-    return (_toEntityList(houseEntities), err);
+    return (_toEntityList(houseModels), err);
   }
 
   @override
@@ -57,6 +67,7 @@ class HouseRepoImpl extends HouseRepo {
     return houseLocalDataSource.clear();
   }
 
+  /// Converts a list of models to a list of entities.
   List<HouseEntity> _toEntityList(List<HouseModel>? models) {
     List<HouseEntity> entities = [];
 
