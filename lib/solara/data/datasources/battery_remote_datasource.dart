@@ -126,6 +126,8 @@ abstract class BatteryRemoteDataSource {
 
   /// The connection information for the remote data source.
   final RepoConfig connection;
+
+  /// The path to the endpoint.
   final String path;
 
   Uri uri = Uri();
