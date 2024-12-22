@@ -53,11 +53,21 @@ class HouseRemoteDataSourceImpl extends HouseRemoteDataSource {
     if (!connection.successCodes.contains(res.statusCode)) {
       _log.e('Server error. Code:${res.statusCode}\nBody:${res.body}');
 
-      Map<String, dynamic> responseErrorMap = json.decode(res.body);
-      final errorData = responseErrorMap['data'];
+      late final List<dynamic> response;
+      try {
+        response = json.decode(res.body);
+      } catch (e) {
+        var err = SolaraIOException(
+          error: Exception(
+              'Connection failed but had error decoding response: $e'),
+          response: res,
+          type: IOExceptionType.other,
+        );
+        return (null, err);
+      }
 
       var err = SolaraIOException(
-        error: Exception(errorData),
+        error: Exception(response),
         response: res,
         type: IOExceptionType.server,
       );
