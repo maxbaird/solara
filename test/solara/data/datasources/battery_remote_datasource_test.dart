@@ -56,25 +56,41 @@ void main() {
   });
 
   group('BatteryRemoteDataSourceImpl.fetch() fail', () {
-    final List<BatteryModel> batteryModels = [];
     setUp(() async {
-      batteryModels.clear();
-      batteryModels.add(BatteryModel.fromJson(
-          {'timestamp': '2024-12-21T20:56:00.467Z', 'value': 3630}));
-
-      when(() => mockResponse.statusCode).thenReturn(500);
-      when(() => mockResponse.body).thenReturn(jsonEncode([
-        for (var batteryModel in batteryModels) ...[batteryModel.toJson()]
-      ]));
-      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
-          .thenAnswer((_) async => mockResponse);
+      when(() => mockResponse.body).thenReturn('[]');
     });
 
-    test('BatteryRemoteDataSourceImpl bad response', () async {
+    test('BatteryRemoteDataSourceImpl failure status code', () async {
+      when(() => mockResponse.statusCode).thenReturn(500);
+      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => mockResponse);
+
       final (result, err) = await batteryRemoteDataSourceImpl.fetch();
       expect(result, isNull);
       expect(err, isNotNull);
       expect(err!.type == IOExceptionType.server, true);
+    });
+
+    test('BatteryRemoteDataSourceImpl empty response', () async {
+      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => MockResponse());
+
+      final (result, err) = await batteryRemoteDataSourceImpl.fetch();
+      expect(result, isNull);
+      expect(err, isNotNull);
+      expect(err!.type == IOExceptionType.other, true);
+    });
+
+    test('BatteryRemoteDataSourceImpl no response body on error', () async {
+      when(() => mockResponse.body).thenReturn('');
+      when(() => mockResponse.statusCode).thenReturn(500);
+      when(() => mockHttpClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => mockResponse);
+
+      final (result, err) = await batteryRemoteDataSourceImpl.fetch();
+      expect(result, isNull);
+      expect(err, isNotNull);
+      expect(err!.type == IOExceptionType.other, true);
     });
   });
 }

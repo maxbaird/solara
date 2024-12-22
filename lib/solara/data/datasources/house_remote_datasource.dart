@@ -50,8 +50,22 @@ class HouseRemoteDataSourceImpl extends HouseRemoteDataSource {
       return (null, err);
     }
 
-    if (!connection.successCodes.contains(res.statusCode)) {
-      _log.e('Server error. Code:${res.statusCode}\nBody:${res.body}');
+    late final int statusCode;
+
+    try {
+      statusCode = res.statusCode;
+    } catch (e) {
+      var err = SolaraIOException(
+        error: Exception(
+            'Connection failed but had error decoding statusCode: $e'),
+        response: res,
+        type: IOExceptionType.other,
+      );
+      return (null, err);
+    }
+
+    if (!connection.successCodes.contains(statusCode)) {
+      _log.e('Server error. Code:$statusCode\nBody:${res.body}');
 
       late final List<dynamic> response;
       try {
