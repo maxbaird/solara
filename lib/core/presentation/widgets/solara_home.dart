@@ -11,7 +11,16 @@ import '../../../solara/presentation/flows/solar/bloc/solar_bloc.dart'
     as solar_bloc;
 import 'solara_title.dart';
 
+/// A widget that displays the main tabs for Solara.
+///
+/// The tabs displayed contain the line charts for [houseWidget],
+/// [batteryWidget] and [solarWidget].
+///
+/// There is also the option to clear Solara's cache.
 class SolaraHome extends StatelessWidget {
+  /// {@template solara.widgets.solaraHome.solaraHome}
+  /// Creates a widget that displays the main interface of Solara.
+  /// {@endtemplate}
   const SolaraHome({
     super.key,
     required this.houseWidget,
@@ -20,15 +29,33 @@ class SolaraHome extends StatelessWidget {
     required this.clearStorageUseCase,
   });
 
+  /// {@template solara.widgets.solaraHome.houseWidget}
+  /// The widget to display in the house tab.
+  /// {@endtemplate}
   final Widget houseWidget;
+
+  /// {@template solara.widgets.solaraHome.batteryWidget}
+  /// The widget to display in the battery tab.
+  /// {@endtemplate}
   final Widget batteryWidget;
+
+  /// {@template solara.widgets.solaraHome.solarWidget}
+  /// The widget to display in the solar tab.
+  /// {@endtemplate}
   final Widget solarWidget;
+
+  /// The usecase to invoke to clear the application's cache.
   final ClearStorageUseCase clearStorageUseCase;
 
+  /// {@template solara.widgets.solaraHome._onClearCache}
+  /// Invoked when user selects the option to clear the application's cache.
+  /// {@endtemplate}
   void _onClearCache() async => await clearStorageUseCase.call(params: null);
 
   @override
   Widget build(BuildContext context) {
+    /// The blocs provided here are responsible for fetching graph data upon
+    /// creation.
     return MultiBlocProvider(
       providers: [
         BlocProvider<house_bloc.HouseBloc>(
@@ -58,7 +85,9 @@ class SolaraHome extends StatelessWidget {
   }
 }
 
+/// A widget to display the content of the tabs of Solara.
 class _SolaraHome extends StatelessWidget {
+  /// {@macro solara.widgets.solaraHome.solaraHome}
   const _SolaraHome({
     super.key,
     required this.houseWidget,
@@ -67,9 +96,16 @@ class _SolaraHome extends StatelessWidget {
     required this.onClearCache,
   });
 
+  /// {@macro solara.widgets.solaraHome.houseWidget}
   final Widget houseWidget;
+
+  /// {@macro solara.widgets.solaraHome.batteryWidget}
   final Widget batteryWidget;
+
+  /// {@macro solara.widgets.solaraHome.solarWidget}
   final Widget solarWidget;
+
+  /// {@macro solara.widgets.solaraHome._onClearCache}
   final void Function() onClearCache;
 
   List<Widget> get _actions => [

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
 import '../../../../../core/presentation/widgets/solara_circular_progress_indicator.dart';
 import '../../../../../core/presentation/widgets/solara_data_visualizer.dart';
-import '../../../../../core/presentation/widgets/solara_error.dart';
+import '../../../../../core/presentation/widgets/solara_information_message.dart';
 import '../bloc/solar_bloc.dart';
 
 class Solar extends StatefulWidget {
@@ -49,10 +49,10 @@ class _SolarState extends State<Solar>
                 context,
               ),
             ),
-          SolaraBlocStatus.failure => const SolaraError(
+          SolaraBlocStatus.failure => const SolaraInformationMessage(
               message: 'Failed to load data',
             ),
-          SolaraBlocStatus.noData => const SolaraError(
+          SolaraBlocStatus.noData => const SolaraInformationMessage(
               message: 'No data for for selected date',
             ),
         };

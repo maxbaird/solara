@@ -1,4 +1,4 @@
-//// Represents the current state of a BLoc.
+/// Represents the current state of a BLoc.
 ///
 /// Commonly used to determine what should be displayed to the user.
 enum SolaraBlocStatus {
