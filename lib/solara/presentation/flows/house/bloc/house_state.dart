@@ -53,6 +53,7 @@ final class HouseState extends Equatable {
       );
 }
 
+/// The initial state of the bloc.
 final class HouseInitial extends HouseState {
   const HouseInitial({
     required super.date,

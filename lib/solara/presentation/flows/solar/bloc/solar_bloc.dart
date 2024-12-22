@@ -10,6 +10,7 @@ import '../../../../domain/usecases/solar_usecase.dart';
 part 'solar_event.dart';
 part 'solar_state.dart';
 
+/// A utility method to quickly create a new instance of an existing state.
 class SolarBloc extends Bloc<SolarEvent, SolarState> {
   SolarBloc({required this.fetchSolarUseCase})
       : super(SolarInitial(
@@ -22,10 +23,14 @@ class SolarBloc extends Bloc<SolarEvent, SolarState> {
           plotData: {},
           blocStatus: SolaraBlocStatus.initial,
         )) {
+    /// A utility method to quickly create a new instance of an existing state.
     on<Fetch>(_onFetch);
+
+    /// Register a method to toggle the wattage units.
     on<ToggleWatts>(_onToggleWatts);
   }
 
+  /// The use case to invoke to fetch chart data.
   final FetchSolarUseCase fetchSolarUseCase;
 
   Future<void> _onFetch(Fetch event, Emitter<SolarState> emit) async {
@@ -35,11 +40,13 @@ class SolarBloc extends Bloc<SolarEvent, SolarState> {
         await fetchSolarUseCase.call(params: FetchParams(date: event.date));
 
     if (err != null) {
+      /// Error when fetching.
       emit(state.copyWith(blocStatus: SolaraBlocStatus.failure));
       return;
     }
 
     if (solarEntities == null || solarEntities.isEmpty) {
+      /// Found no data.
       emit(state.copyWith(blocStatus: SolaraBlocStatus.noData));
       return;
     }
@@ -57,6 +64,7 @@ class SolarBloc extends Bloc<SolarEvent, SolarState> {
 
     SolaraPlotData plotData = {};
 
+    /// Populate [plotData] with data from filtered [solarEntities].
     for (var solarEntity in solarEntities) {
       double? date = solarEntity.date?.millisecondsSinceEpoch.toDouble();
       double? watts = solarEntity.watts?.toDouble();
@@ -66,6 +74,7 @@ class SolarBloc extends Bloc<SolarEvent, SolarState> {
       }
     }
 
+    /// Emit a success state.
     emit(
       state.copyWith(
         plotData: plotData,
