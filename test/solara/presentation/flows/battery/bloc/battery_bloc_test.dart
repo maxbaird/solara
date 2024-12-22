@@ -141,4 +141,24 @@ void main() {
           expect(bloc.state.blocStatus == SolaraBlocStatus.noData, true),
     );
   });
+
+  group('BatteryBloc: ToggleWatts', () {
+    // dynamic act(BatteryBloc bloc) => bloc.add(ToggleWatts(showKilowatt: true));
+
+    blocTest(
+      'Toggles kilowatts on',
+      build: build,
+      act: (bloc) => bloc.add(ToggleWatts(showKilowatt: true)),
+      verify: (bloc) =>
+          expect(bloc.state.unitType == SolaraUnitType.kilowatts, true),
+    );
+
+    blocTest(
+      'Toggles kilowatts off',
+      build: build,
+      act: (bloc) => bloc.add(ToggleWatts(showKilowatt: false)),
+      verify: (bloc) =>
+          expect(bloc.state.unitType == SolaraUnitType.watts, true),
+    );
+  });
 }
