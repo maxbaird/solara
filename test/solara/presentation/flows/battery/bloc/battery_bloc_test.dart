@@ -18,19 +18,37 @@ void main() {
         fetchBatteryUseCase: mockFetchBatteryUseCase,
       );
 
-  final date = DateTime(2024, 12, 22);
+  final date = DateTime.now();
+  final date1 = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+    0,
+  );
+  final date2 = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+    1,
+  );
+  final date3 = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+    2,
+  );
 
   final List<BatteryEntity> batteryEntities = [
-    BatteryEntity(date: date, watts: 1000),
-    BatteryEntity(date: date, watts: 2000),
-    BatteryEntity(date: date, watts: 3000),
-    BatteryEntity(date: DateTime(2024, 12, 22), watts: 4000),
+    BatteryEntity(date: date1, watts: 1000),
+    BatteryEntity(date: date2, watts: 2000),
+    BatteryEntity(date: date3, watts: 3000),
+    BatteryEntity(date: DateTime(1970, 12, 22, 0), watts: 4000),
   ];
 
   final SolaraPlotData plotData = {
-    date.microsecondsSinceEpoch.toDouble(): 1000,
-    date.microsecondsSinceEpoch.toDouble(): 2000,
-    date.microsecondsSinceEpoch.toDouble(): 3000,
+    date1.microsecondsSinceEpoch.toDouble(): 1000,
+    date2.microsecondsSinceEpoch.toDouble(): 2000,
+    date3.microsecondsSinceEpoch.toDouble(): 3000,
   };
 
   setUpAll(() {
@@ -40,32 +58,62 @@ void main() {
   group('BatteryBloc', () {
     dynamic act(BatteryBloc bloc) => bloc.add(Fetch(date: date));
 
-    blocTest(
-      'Fetches battery entities',
-      build: build,
-      setUp: () {
-        when(() => mockFetchBatteryUseCase.call(params: any(named: 'params')))
-            .thenAnswer((_) async => (batteryEntities, null));
-      },
-      act: act,
-      expect: () => <BatteryState>[
-        BatteryState(
-          date: DateTime(
-            DateTime.now().year,
-            DateTime.now().month,
-            DateTime.now().day,
-          ),
-          unitType: SolaraUnitType.watts,
-          plotData: {},
-          blocStatus: SolaraBlocStatus.inProgress,
-        ),
-        BatteryState(
-          date: date,
-          unitType: SolaraUnitType.watts,
-          plotData: plotData,
-          blocStatus: SolaraBlocStatus.success,
-        ),
-      ],
-    );
+    blocTest('Fetches battery entities',
+        build: build,
+        setUp: () {
+          when(() => mockFetchBatteryUseCase.call(params: any(named: 'params')))
+              .thenAnswer((_) async => (batteryEntities, null));
+        },
+        act: act,
+        expect: () => <BatteryState>[
+              BatteryState(
+                date: DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                ),
+                unitType: SolaraUnitType.watts,
+                plotData: {},
+                blocStatus: SolaraBlocStatus.inProgress,
+              ),
+              BatteryState(
+                date: date,
+                unitType: SolaraUnitType.watts,
+                plotData: plotData,
+                blocStatus: SolaraBlocStatus.success,
+              ),
+            ],
+        verify: (bloc) {
+          expect(bloc.state.plotData.length, plotData.length);
+        });
+
+    blocTest('Filters battery entities outside of specified date',
+        build: build,
+        setUp: () {
+          when(() => mockFetchBatteryUseCase.call(params: any(named: 'params')))
+              .thenAnswer((_) async => (batteryEntities, null));
+        },
+        act: act,
+        expect: () => <BatteryState>[
+              BatteryState(
+                date: DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                ),
+                unitType: SolaraUnitType.watts,
+                plotData: {},
+                blocStatus: SolaraBlocStatus.inProgress,
+              ),
+              BatteryState(
+                date: date,
+                unitType: SolaraUnitType.watts,
+                plotData: plotData,
+                blocStatus: SolaraBlocStatus.success,
+              ),
+            ],
+        verify: (bloc) {
+          expect(bloc.state.plotData.length, batteryEntities.length - 1);
+        });
   });
 }

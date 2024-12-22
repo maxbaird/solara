@@ -60,7 +60,6 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
     for (var batteryEntity in batteryEntities) {
       double? date = batteryEntity.date?.millisecondsSinceEpoch.toDouble();
       double? watts = batteryEntity.watts?.toDouble();
-
       if (date != null && watts != null) {
         plotData[date] = watts;
       }
