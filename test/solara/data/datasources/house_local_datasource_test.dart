@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:solara/core/resources/solara_io_exception.dart';
-import 'package:solara/solara/data/datasources/house_local_data_source.dart';
+import 'package:solara/solara/data/datasources/house_local_datasource.dart';
 import 'package:solara/solara/data/models/house_model.dart';
 
 void main() {

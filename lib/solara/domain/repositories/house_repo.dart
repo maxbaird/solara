@@ -1,5 +1,5 @@
 import '../../../core/resources/solara_io_exception.dart';
-import '../../data/datasources/house_local_data_source.dart';
+import '../../data/datasources/house_local_datasource.dart';
 import '../../data/datasources/house_remote_datasource.dart';
 import '../entities/house.dart';
 

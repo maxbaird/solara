@@ -1,11 +1,12 @@
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
 import 'core/constants/constants.dart';
 import 'core/util/repo_config.dart';
 import 'solara/data/datasources/battery_local_datasource.dart';
 import 'solara/data/datasources/battery_remote_datasource.dart';
-import 'solara/data/datasources/house_local_data_source.dart';
+import 'solara/data/datasources/house_local_datasource.dart';
 import 'solara/data/datasources/house_remote_datasource.dart';
 import 'solara/data/datasources/solar_local_datasource.dart';
 import 'solara/data/datasources/solar_remote_datasource.dart';
@@ -22,7 +23,6 @@ import 'solara/domain/usecases/solar_usecase.dart';
 import 'solara/presentation/flows/battery/bloc/battery_bloc.dart';
 import 'solara/presentation/flows/house/bloc/house_bloc.dart';
 import 'solara/presentation/flows/solar/bloc/solar_bloc.dart';
-import 'package:http/http.dart' as http;
 
 final GetIt sl = GetIt.instance;
 final RepoConfig solaraRepoConfig = RepoConfig(
