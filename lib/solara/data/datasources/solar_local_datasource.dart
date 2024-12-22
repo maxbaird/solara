@@ -4,7 +4,7 @@ import '../../../core/resources/solara_io_exception.dart';
 import '../../../core/util/logger.dart';
 import '../models/solar_model.dart';
 
-/// The local data source for caching battery data.
+/// The local data source for caching solar data.
 class SolarLocalDatasourceImpl implements SolarLocalDataSource {
   SolarLocalDatasourceImpl({String? cacheName}) {
     _cacheName = cacheName ?? runtimeType.toString();

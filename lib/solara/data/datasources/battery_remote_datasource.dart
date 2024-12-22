@@ -7,12 +7,15 @@ import '../../../core/util/logger.dart';
 import '../../../core/util/repo_config.dart';
 import '../models/battery_model.dart';
 
+/// Performs the operations for fetching data from a remote
+/// API via http requests.
 class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
   BatteryRemoteDataSourceImpl(RepoConfig connection, String path)
       : super(connection, path) {
     _url = connection.baseUrl + path;
   }
 
+  /// The Url to the endpoint.
   late final String _url;
 
   final _log = logger;
@@ -26,9 +29,11 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
     uri = Uri.parse(endPointUrl);
 
     if (date != null) {
+      // Add the date to the request parameters.
       params['date'] = date.toIso8601String();
     }
 
+    // For this datasource the type will always be 'battery'.
     params['type'] = 'battery';
 
     uri = Uri(
@@ -44,6 +49,7 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
     Response? res;
 
     try {
+      // Make the request to the remote api.
       res = await connection.client.get(uri, headers: connection.dataHeader);
     } catch (e) {
       _log.e(e);
@@ -65,7 +71,9 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
       return (null, err);
     }
 
+    /// Checks if the status code of [res] is not a success code.
     if (!connection.successCodes.contains(statusCode)) {
+      /// If request fails, handle the failure in this scope.
       _log.e('Server error. Code:$statusCode\nBody:${res.body}');
 
       late final List<dynamic> response;
@@ -111,14 +119,20 @@ class BatteryRemoteDataSourceImpl extends BatteryRemoteDataSource {
   }
 }
 
+/// Provides a consistent interface for all
+/// remote battery data sources.
 abstract class BatteryRemoteDataSource {
   BatteryRemoteDataSource(this.connection, this.path);
 
+  /// The connection information for the remote data source.
   final RepoConfig connection;
   final String path;
 
   Uri uri = Uri();
 
+  /// Fetches battery models from the remote data source.
+  ///
+  /// Will return an error if remote fetch fails.
   Future<(List<BatteryModel>?, SolaraIOException?)> fetch({
     DateTime? date,
   });
