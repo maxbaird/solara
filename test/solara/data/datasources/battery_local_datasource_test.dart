@@ -60,7 +60,7 @@ void main() {
     });
   });
 
-  group('BatteryLocalDataSource create', () {
+  group('BatteryLocalDataSource.create()', () {
     setUp(() async {
       await Hive.deleteFromDisk();
     });
@@ -95,7 +95,7 @@ void main() {
     });
   });
 
-  group('BatteryLocalDataSource clear', () {
+  group('BatteryLocalDataSource.clear()', () {
     setUp(() async {
       await Hive.deleteFromDisk();
     });
