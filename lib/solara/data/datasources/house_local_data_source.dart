@@ -67,7 +67,7 @@ class HouseLocalDatasourceImpl implements HouseLocalDataSource {
   Future<void> clear() async {
     await _openStorage();
     try {
-      _cache?.clear();
+      await _cache?.clear();
       _log.i('Cleared HouseLocalDataSourceImpl local storage');
     } catch (e) {
       _log.e(e);

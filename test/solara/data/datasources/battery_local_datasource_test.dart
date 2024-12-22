@@ -94,4 +94,29 @@ void main() {
       expect(result, false);
     });
   });
+
+  group('BatteryLocalDataSource clear', () {
+    setUp(() async {
+      await Hive.deleteFromDisk();
+    });
+
+    tearDown(() async {
+      await batteryLocalDataSourceImpl.clear();
+    });
+
+    test('Box is cleared', () async {
+      BatteryModel model = BatteryModel.fromJson(
+          {'timestamp': '2024-12-21T20:56:00.467Z', 'value': 3630});
+
+      await batteryLocalDataSourceImpl.create(model);
+      await batteryLocalDataSourceImpl.clear();
+
+      var (results, err) = await batteryLocalDataSourceImpl.fetch(
+          date: DateTime.parse('2024-12-21T20:56:00.467Z'));
+
+      expect(results, isNotNull);
+      expect(results!.isEmpty, true);
+      expect(err, isNull);
+    });
+  });
 }

@@ -67,7 +67,7 @@ class BatteryLocalDatasourceImpl implements BatteryLocalDataSource {
   Future<void> clear() async {
     await _openStorage();
     try {
-      _cache?.clear();
+      await _cache?.clear();
       _log.i('Cleared BatteryLocalDataSourceImpl local storage');
     } catch (e) {
       _log.e(e);
