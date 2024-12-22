@@ -3,6 +3,7 @@ import '../repositories/battery_repo.dart';
 import '../repositories/house_repo.dart';
 import '../repositories/solar_repo.dart';
 
+/// The use case to clear data cached by all repositories.
 class ClearStorageUseCase implements UseCase<void, void> {
   const ClearStorageUseCase(
     this._batteryRepo,
