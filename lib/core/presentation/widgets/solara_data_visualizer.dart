@@ -53,7 +53,7 @@ class SolaraDataVisualizer extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SolaraGraph(
+        SolaraLineChart(
           key: Key('solaraGraph'),
           xLabel: _date,
           plotData: plotData,

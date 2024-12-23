@@ -7,11 +7,11 @@ import '../util/flows/bloc/solara_unit_type.dart';
 import '../util/flows/solara_plot_data.dart';
 
 /// A widget to display a line chart.
-class SolaraGraph extends StatelessWidget {
+class SolaraLineChart extends StatelessWidget {
   /// Creates a widget that displays a line chart.
   ///
   /// Line chart is created from [plotData].
-  const SolaraGraph({
+  const SolaraLineChart({
     super.key,
     required this.plotData,
     this.xLabel = 'Time of Day',
