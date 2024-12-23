@@ -54,6 +54,7 @@ class SolaraDataVisualizer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SolaraGraph(
+          key: Key('solaraGraph'),
           xLabel: _date,
           plotData: plotData,
           unitType: unitType,
@@ -125,6 +126,7 @@ class _BottomRow extends StatelessWidget {
         Row(
           children: [
             Switch(
+              key: const Key('solaraToggleUnit'),
               value: _showKilowatt,
               onChanged: onToggleUnit,
             ),
@@ -132,6 +134,7 @@ class _BottomRow extends StatelessWidget {
           ],
         ),
         ElevatedButton(
+          key: const Key('solaraDateSelect'),
           onPressed: () => _onDateChange(context),
           child: const Text('Select Date'),
         ),
