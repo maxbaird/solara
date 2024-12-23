@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../util/flows/bloc/solara_unit_type.dart';
 import '../util/flows/solara_plot_data.dart';
 import 'solara_line_chart.dart';
+import 'util/solara_date_picker.dart';
 
 /// A widget that displays graphs.
 ///
@@ -106,12 +107,9 @@ class _BottomRow extends StatelessWidget {
   ///
   /// If user cancels date selection then [onDateChange] is not invoked.
   Future<void> _onDateChange(BuildContext context) async {
-    DateTime? date = await showDatePicker(
+    DateTime? date = await solaraDatePicker(
       context: context,
-      barrierDismissible: false,
       initialDate: currentlySelectedDate,
-      firstDate: DateTime(1995),
-      lastDate: DateTime.now(),
     );
     if (!context.mounted || date == null) {
       return;

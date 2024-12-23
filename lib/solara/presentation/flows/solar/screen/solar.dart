@@ -49,11 +49,19 @@ class _SolarState extends State<Solar>
                 context,
               ),
             ),
-          SolaraBlocStatus.failure => const SolaraInformationMessage(
+          SolaraBlocStatus.failure => SolaraInformationMessage(
               message: 'Failed to load data',
+              onSelectDate: (date) => _onDateChange(
+                date,
+                context,
+              ),
             ),
-          SolaraBlocStatus.noData => const SolaraInformationMessage(
+          SolaraBlocStatus.noData => SolaraInformationMessage(
               message: 'No data for for selected date',
+              onSelectDate: (date) => _onDateChange(
+                date,
+                context,
+              ),
             ),
         };
       },

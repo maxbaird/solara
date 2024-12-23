@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:solara/core/presentation/widgets/util/solara_date_picker.dart';
 
 /// A widget to display an informative message.
 ///
@@ -7,17 +8,38 @@ import 'package:flutter/material.dart';
 class SolaraInformationMessage extends StatelessWidget {
   /// Creates a widget to display an information message to the user.
   ///
+  /// User is provided with the option to select a new date.
   /// Centers [message] in parent widget.
   const SolaraInformationMessage({
     super.key,
     required this.message,
+    required this.onSelectDate,
   });
 
   /// The message to display.
   final String message;
 
+  /// Call back to invoke date selection.
+  final void Function(DateTime) onSelectDate;
+
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text(message));
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Center(child: Text(message)),
+        const SizedBox(height: 16.0),
+        ElevatedButton(
+          onPressed: () async {
+            final DateTime? date = await solaraDatePicker(context: context);
+            if (!context.mounted || date == null) {
+              return;
+            }
+            onSelectDate(date);
+          },
+          child: const Text('Select Date'),
+        ),
+      ],
+    );
   }
 }
