@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:solara/core/presentation/widgets/util/solara_date_picker.dart';
+import 'util/solara_date_picker.dart';
 
 /// A widget to display an informative message.
 ///
@@ -30,6 +30,7 @@ class SolaraInformationMessage extends StatelessWidget {
         Center(child: Text(message)),
         const SizedBox(height: 16.0),
         ElevatedButton(
+          key: Key('solaraDatePicker'),
           onPressed: () async {
             final DateTime? date = await solaraDatePicker(context: context);
             if (!context.mounted || date == null) {
