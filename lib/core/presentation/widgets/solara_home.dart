@@ -112,6 +112,7 @@ class _SolaraHome extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: ElevatedButton.icon(
+            key: Key('clearCache'),
             onPressed: onClearCache,
             label: const Text('Clear Cache'),
             icon: Icon(Icons.delete),
@@ -143,6 +144,7 @@ class _SolaraHome extends StatelessWidget {
       initialIndex: 0,
       child: Scaffold(
         appBar: AppBar(
+          key: Key('solaraAppBar'),
           title: SolaraTitle('Solara'),
           centerTitle: true,
           actions: _actions,
