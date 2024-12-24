@@ -36,20 +36,17 @@ class _SolarState extends State<Solar>
           SolaraBlocStatus.initial => const SolaraCircularProgressIndicator(),
           SolaraBlocStatus.inProgress =>
             const SolaraCircularProgressIndicator(),
-          SolaraBlocStatus.success => const Placeholder(),
-          // SolaraBlocStatus.success => SolaraDataVisualizer(
-          //     date: state.date,
-          //     plotData: state.plotData,
-          //     unitType: state.unitType,
-          //     onToggleUnit: (showKilowatt) => _onToggleUnit(
-          //       showKilowatt,
-          //       context,
-          //     ),
-          //     onDateChange: (date) => _onDateChange(
-          //       date,
-          //       context,
-          //     ),
-          //   ),
+          SolaraBlocStatus.success => SolaraDataVisualizer(
+              uiModel: state.solarUiModel,
+              onToggleUnit: (showKilowatt) => _onToggleUnit(
+                showKilowatt,
+                context,
+              ),
+              onDateChange: (date) => _onDateChange(
+                date,
+                context,
+              ),
+            ),
           SolaraBlocStatus.failure => SolaraInformationMessage(
               message: 'Failed to load data',
               onSelectDate: (date) => _onDateChange(

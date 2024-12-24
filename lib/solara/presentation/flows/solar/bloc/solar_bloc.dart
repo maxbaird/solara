@@ -6,23 +6,34 @@ import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart
 import '../../../../../core/presentation/util/flows/bloc/solara_unit_type.dart';
 import '../../../../../core/presentation/util/flows/solara_plot_data.dart';
 import '../../../../domain/usecases/solar_usecase.dart';
+import '../model/solar_ui_model.dart';
 
 part 'solar_event.dart';
 part 'solar_state.dart';
 
+final DateTime _date = DateTime.now();
+
+/// A time resolution that stops at day is sufficient. Going into the
+/// milliseconds makes testing tedious.
+///
+/// There might be a more idiomatic way to achieve this, but this is the most
+/// straightforward way that avoids an additional dependency on a package such
+/// as intl.
+final DateTime _currentDate = DateTime(_date.year, _date.month, _date.day);
+
 /// A utility method to quickly create a new instance of an existing state.
 class SolarBloc extends Bloc<SolarEvent, SolarState> {
   SolarBloc({required this.fetchSolarUseCase})
-      : super(SolarInitial(
-          date: DateTime(
-            DateTime.now().year,
-            DateTime.now().month,
-            DateTime.now().day,
+      : super(
+          SolarInitial(
+            solarUiModel: SolarUiModel(
+              date: _currentDate,
+              unitType: SolaraUnitType.watts,
+              plotData: <double, double>{},
+            ),
+            blocStatus: SolaraBlocStatus.initial,
           ),
-          unitType: SolaraUnitType.watts,
-          plotData: {},
-          blocStatus: SolaraBlocStatus.initial,
-        )) {
+        ) {
     /// A utility method to quickly create a new instance of an existing state.
     on<Fetch>(_onFetch);
 
@@ -51,34 +62,16 @@ class SolarBloc extends Bloc<SolarEvent, SolarState> {
       return;
     }
 
-    /// Filter away null dates and keep dates that exactly match [event.date]
-    solarEntities = solarEntities.where((e) {
-      final DateTime? d = e.date;
-      if (d != null) {
-        return d.year == event.date.year &&
-            d.month == event.date.month &&
-            d.day == event.date.day;
-      }
-      return false;
-    }).toList();
-
-    SolaraPlotData plotData = {};
-
-    /// Populate [plotData] with data from filtered [solarEntities].
-    for (var solarEntity in solarEntities) {
-      double? date = solarEntity.date?.millisecondsSinceEpoch.toDouble();
-      double? watts = solarEntity.watts?.toDouble();
-
-      if (date != null && watts != null) {
-        plotData[date] = watts;
-      }
-    }
+    /// Build a Ui model from results.
+    final SolarUiModel solarUiModel = SolarUiModel.fromEntityList(
+      solarEntities: solarEntities,
+      date: event.date,
+    );
 
     /// Emit a success state.
     emit(
       state.copyWith(
-        plotData: plotData,
-        date: event.date,
+        solarUiModel: solarUiModel,
         blocStatus: SolaraBlocStatus.success,
       ),
     );
@@ -86,11 +79,15 @@ class SolarBloc extends Bloc<SolarEvent, SolarState> {
 
   void _onToggleWatts(ToggleWatts event, Emitter<SolarState> emit) {
     emit(state.copyWith(blocStatus: SolaraBlocStatus.inProgress));
+
+    final SolarUiModel solarUiModel = state.solarUiModel.copyWith(
+      unitType:
+          event.showKilowatt ? SolaraUnitType.kilowatts : SolaraUnitType.watts,
+    );
+
     emit(
       state.copyWith(
-        unitType: event.showKilowatt
-            ? SolaraUnitType.kilowatts
-            : SolaraUnitType.watts,
+        solarUiModel: solarUiModel,
         blocStatus: SolaraBlocStatus.success,
       ),
     );
