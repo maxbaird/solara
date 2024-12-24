@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
+import 'package:solara/core/data/datasources/solara_local_storage.dart';
+import 'package:solara/solara/data/models/battery_model.dart';
 
 import 'core/constants/constants.dart';
 import 'core/util/repo_config.dart';
@@ -32,9 +34,20 @@ final RepoConfig solaraRepoConfig = RepoConfig(
   client: RetryClient(http.Client()),
 );
 
-void init() {
+Future<void> init() async {
+  final SolaraLocalStorage batteryLocalStorage =
+      SolaraLocalStorage(storageName: 'batteryLocalStorage');
+  final SolaraLocalStorage houseLocalStorage =
+      SolaraLocalStorage(storageName: 'houseLocalStorage');
+  final SolaraLocalStorage solarLocalStorage =
+      SolaraLocalStorage(storageName: 'solarLocalStorage');
+
+  await batteryLocalStorage.init();
+  await houseLocalStorage.init();
+  await solarLocalStorage.init();
+
   final BatteryLocalDataSource batteryLocalDataSource =
-      BatteryLocalDataSourceImpl();
+      BatteryLocalDataSourceImpl(localStorage: batteryLocalStorage);
   final BatteryRemoteDataSource batteryRemoteDataSource =
       BatteryRemoteDataSourceImpl(solaraRepoConfig, '/monitoring');
 

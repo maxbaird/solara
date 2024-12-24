@@ -8,7 +8,7 @@ import 'solara/presentation/flows/house/screen/house.dart';
 import 'solara/presentation/flows/solar/screen/solar.dart';
 
 void main() async {
-  dependency_injector.init();
+  await dependency_injector.init();
   await Hive.initFlutter();
   runApp(const Solara());
 }
