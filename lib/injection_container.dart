@@ -2,7 +2,6 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:solara/core/data/datasources/solara_local_storage.dart';
-import 'package:solara/solara/data/models/battery_model.dart';
 
 import 'core/constants/constants.dart';
 import 'core/util/repo_config.dart';
