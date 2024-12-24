@@ -1,4 +1,4 @@
-import 'package:solara/core/resources/solara_io_exception.dart';
+import '../../resources/solara_io_exception.dart';
 
 abstract interface class SolaraPersistenceInterface {
   /// The name of the storage.

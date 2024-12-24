@@ -45,17 +45,17 @@ class SolaraIOException implements Exception {
   StackTrace? stackTrace;
 
   /// A string representation of [error].
-  String get message => error?.toString() ?? '';
+  String get _message => error?.toString() ?? '';
 
   @override
   String toString() {
-    var msg = 'Error: $message';
+    var msg = _message;
     if (error is Error) {
       msg += '\n${(error as Error).stackTrace}';
     }
     if (stackTrace != null) {
       msg += '\nSource stack:\n$stackTrace';
     }
-    return msg;
+    return '$type $msg';
   }
 }
