@@ -10,8 +10,8 @@ class MockClearStorageUseCase extends Mock implements ClearStorageUseCase {}
 void main() {
   final mockClearStorageUseCase = MockClearStorageUseCase();
 
-  setUpAll(() {
-    injection_container.init();
+  setUpAll(() async {
+    await injection_container.init();
   });
 
   group('solaraHome', () {
