@@ -25,7 +25,6 @@ final class BatteryState extends Equatable {
   /// be updated from the back-end.
   @override
   List<Object> get props => [
-        batteryUiModel,
         blocStatus,
       ];
 

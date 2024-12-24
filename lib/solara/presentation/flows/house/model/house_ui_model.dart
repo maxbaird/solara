@@ -15,9 +15,10 @@ class HouseUiModel implements UiModel {
   HouseUiModel.fromEntityList({
     required List<HouseEntity> houseEntities,
     required DateTime date,
+    required SolaraUnitType unitType,
   }) {
     _date = date;
-    _unitType = SolaraUnitType.watts;
+    _unitType = unitType;
     _plotData = <double, double>{};
 
     /// Filter away null dates and keep dates that exactly match [date]

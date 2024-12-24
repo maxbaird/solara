@@ -15,9 +15,10 @@ class BatteryUiModel implements UiModel {
   BatteryUiModel.fromEntityList({
     required List<BatteryEntity> batteryEntities,
     required DateTime date,
+    required SolaraUnitType unitType,
   }) {
     _date = date;
-    _unitType = SolaraUnitType.watts;
+    _unitType = unitType;
     _plotData = <double, double>{};
 
     /// Filter away null dates and keep dates that exactly match [date]

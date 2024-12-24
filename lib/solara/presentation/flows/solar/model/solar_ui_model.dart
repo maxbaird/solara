@@ -15,9 +15,10 @@ class SolarUiModel implements UiModel {
   SolarUiModel.fromEntityList({
     required List<SolarEntity> solarEntities,
     required DateTime date,
+    required SolaraUnitType unitType,
   }) {
     _date = date;
-    _unitType = SolaraUnitType.watts;
+    _unitType = unitType;
     _plotData = <double, double>{};
 
     /// Filter away null dates and keep dates that exactly match [date]

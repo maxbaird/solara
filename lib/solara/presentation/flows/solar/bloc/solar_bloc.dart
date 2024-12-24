@@ -65,6 +65,7 @@ class SolarBloc extends Bloc<SolarEvent, SolarState> {
     final SolarUiModel solarUiModel = SolarUiModel.fromEntityList(
       solarEntities: solarEntities,
       date: event.date,
+      unitType: state.solarUiModel.unitType, // preserve the current unit type
     );
 
     /// Emit a success state.

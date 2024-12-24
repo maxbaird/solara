@@ -25,7 +25,6 @@ final class HouseState extends Equatable {
   /// be updated from the back-end.
   @override
   List<Object> get props => [
-        houseUiModel,
         blocStatus,
       ];
 

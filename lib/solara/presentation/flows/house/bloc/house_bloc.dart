@@ -65,6 +65,7 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
     final HouseUiModel houseUiModel = HouseUiModel.fromEntityList(
       houseEntities: houseEntities,
       date: event.date,
+      unitType: state.houseUiModel.unitType, // preserve the current unit type
     );
 
     /// Emit a success state.

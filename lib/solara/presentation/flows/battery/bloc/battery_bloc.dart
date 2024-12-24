@@ -65,6 +65,7 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
     final BatteryUiModel batteryUiModel = BatteryUiModel.fromEntityList(
       batteryEntities: batteryEntities,
       date: event.date,
+      unitType: state.batteryUiModel.unitType, // preserve the current unit type
     );
 
     /// Emit a success state.
