@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/presentation/widgets/solara_home.dart';
 import 'injection_container.dart' as dependency_injector;
@@ -9,7 +8,6 @@ import 'solara/presentation/flows/solar/screen/solar.dart';
 
 void main() async {
   await dependency_injector.init();
-  await Hive.initFlutter();
   runApp(const Solara());
 }
 

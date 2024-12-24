@@ -1,51 +1,42 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../../core/data/datasources/solara_persistence_interface.dart';
 import '../../../core/resources/solara_io_exception.dart';
 import '../../../core/util/logger.dart';
 import '../models/solar_model.dart';
 
 /// The local data source for caching solar data.
 class SolarLocalDataSourceImpl implements SolarLocalDataSource {
-  SolarLocalDataSourceImpl({String? cacheName}) {
-    _cacheName = cacheName ?? runtimeType.toString();
-  }
+  SolarLocalDataSourceImpl({required this.localStorage});
+
+  @override
+  final SolaraPersistenceInterface localStorage;
+
+  final _log = logger;
 
   /// The name of the data cache.
   late final String _cacheName;
 
   /// The container used for the cache.
   Box<dynamic>? _cache;
-  final _log = logger;
+  // final _log = logger;
 
   @override
   Future<(List<SolarModel>?, SolaraIOException?)> fetch(
       {DateTime? date}) async {
-    try {
-      if (!await Hive.boxExists(_cacheName)) {
-        _log.w('Hive Box for SolarDataSourceImpl not found');
-        return (
-          null,
-          SolaraIOException(
-              type: IOExceptionType.localStorage,
-              error: 'Cache for SolarDataSourceImpl not found')
-        );
-      }
+    var (results, err) = await localStorage.readAll();
 
-      await _openStorage();
-
-      final List<dynamic> resultItems = _cache!.values.toList();
-
-      /// Filter any data that is not associated with [date].
-      List<SolarModel> solarModels = _filterByDate(resultItems, date);
-
-      _log.i(
-          'Fetched ${solarModels.length} from SolarModelLocalDataSourceImpl cache');
-      await _closeStorage();
-      return (solarModels, null);
-    } catch (e) {
-      _log.e('Error fetching data from SolarDataSourceImpl: $_cacheName: $e');
-      return (null, SolaraIOException(error: e));
+    if (err != null) {
+      _log.w(
+          'Error fetching data from $runtimeType: ${localStorage.storageName}');
+      return (null, err);
     }
+
+    _log.i('Fetched ${results.length} from $runtimeType cache');
+
+    List<SolarModel> batteryModels = _filterByDate(results, date);
+
+    return (batteryModels, null);
   }
 
   @override
@@ -56,44 +47,21 @@ class SolarLocalDataSourceImpl implements SolarLocalDataSource {
       return false;
     }
 
-    await _openStorage();
+    var (result, err) = await localStorage.write(key, model.toJson());
 
-    /// Don't write to cache if data for [key] already exists.
-    if (_cache!.containsKey(key)) {
-      return false;
+    if (err != null) {
+      _log.e('Error writing to local  storage: $err');
     }
-
-    await _cache!.put(key, model.toJson());
-    await _closeStorage();
-    return true;
+    return result;
   }
 
   @override
   Future<void> clear() async {
-    await _openStorage();
-    try {
-      await _cache?.clear();
-      _log.i('Cleared SolarLocalDataSourceImpl local storage');
-    } catch (e) {
-      _log.e(e);
-      rethrow;
+    var (result, err) = await localStorage.clearAll();
+
+    if (err != null || !result) {
+      _log.e('Error clearing local  storage: $err');
     }
-  }
-
-  Future<bool> _openStorage() async {
-    if (Hive.isBoxOpen(_cacheName)) {
-      return true;
-    }
-
-    _cache = await Hive.openBox(_cacheName);
-    return true;
-  }
-
-  Future<bool> _closeStorage() async {
-    /// Not necessary according to docs:
-    /// [https://docs.hivedb.dev/#/basics/boxes?id=close-box]
-    await _cache?.close();
-    return true;
   }
 
   /// Data fetched from the API can sometimes contain data from
@@ -126,6 +94,11 @@ class SolarLocalDataSourceImpl implements SolarLocalDataSource {
 }
 
 abstract class SolarLocalDataSource {
+  SolarLocalDataSource({required this.localStorage});
+
+  /// Used for local storage IO.
+  final SolaraPersistenceInterface localStorage;
+
   /// The fetch operation.
   ///
   /// Returns all cached data matching [date].

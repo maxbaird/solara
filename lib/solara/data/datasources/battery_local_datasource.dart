@@ -20,11 +20,11 @@ class BatteryLocalDataSourceImpl implements BatteryLocalDataSource {
 
     if (err != null) {
       _log.w(
-          'Error fetching data from BatteryLocalDataSourceImpl: ${localStorage.storageName}');
+          'Error fetching data from $runtimeType: ${localStorage.storageName}');
       return (null, err);
     }
 
-    _log.i('Fetched ${results.length} from BatteryLocalDataSourceImpl cache');
+    _log.i('Fetched ${results.length} from $runtimeType cache');
 
     List<BatteryModel> batteryModels = _filterByDate(results, date);
 
@@ -49,7 +49,7 @@ class BatteryLocalDataSourceImpl implements BatteryLocalDataSource {
 
   @override
   Future<void> clear() async {
-    var (result, err) = await localStorage.clear();
+    var (result, err) = await localStorage.clearAll();
 
     if (err != null || !result) {
       _log.e('Error clearing local  storage: $err');
@@ -87,9 +87,10 @@ class BatteryLocalDataSourceImpl implements BatteryLocalDataSource {
 }
 
 abstract class BatteryLocalDataSource {
-  final SolaraPersistenceInterface localStorage;
-
   BatteryLocalDataSource({required this.localStorage});
+
+  /// Used for local storage IO.
+  final SolaraPersistenceInterface localStorage;
 
   /// The fetch operation.
   ///

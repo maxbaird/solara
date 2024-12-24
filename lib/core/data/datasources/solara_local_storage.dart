@@ -33,7 +33,7 @@ class SolaraLocalStorage implements SolaraPersistenceInterface {
     try {
       if (!await Hive.boxExists(storageName)) {
         final err = 'Local storage for $storageName not found';
-        _log.e(err);
+        _log.w(err);
         return (
           null,
           SolaraIOException(type: IOExceptionType.localStorage, error: err)
@@ -82,7 +82,7 @@ class SolaraLocalStorage implements SolaraPersistenceInterface {
   }
 
   @override
-  Future<(bool, SolaraIOException?)> clear() async {
+  Future<(bool, SolaraIOException?)> clearAll() async {
     try {
       await _openStorage();
       await _cache?.clear();
@@ -96,12 +96,6 @@ class SolaraLocalStorage implements SolaraPersistenceInterface {
         SolaraIOException(error: err, type: IOExceptionType.localStorage)
       );
     }
-  }
-
-  @override
-  Future<(bool, SolaraIOException?)> delete(String key) {
-    // TODO: implement delete
-    throw UnimplementedError();
   }
 
   Future<bool> _openStorage() async {

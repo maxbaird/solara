@@ -13,9 +13,6 @@ abstract interface class SolaraPersistenceInterface {
   /// Write to the storage device.
   Future<(bool, SolaraIOException?)> write(String key, dynamic value);
 
-  /// Delete from the storage device.
-  Future<(bool, SolaraIOException?)> delete(String key);
-
-  /// Clear storage device.
-  Future<(bool, SolaraIOException?)> clear();
+  /// Clear all data from the storage device.
+  Future<(bool, SolaraIOException?)> clearAll();
 }

@@ -58,7 +58,8 @@ Future<void> init() async {
     ),
   );
 
-  final HouseLocalDataSource houseLocalDataSource = HouseLocalDataSourceImpl();
+  final HouseLocalDataSource houseLocalDataSource =
+      HouseLocalDataSourceImpl(localStorage: houseLocalStorage);
   final HouseRemoteDataSource houseRemoteDataSource =
       HouseRemoteDataSourceImpl(solaraRepoConfig, '/monitoring');
 
@@ -69,7 +70,8 @@ Future<void> init() async {
     ),
   );
 
-  final SolarLocalDataSource solarLocalDataSource = SolarLocalDataSourceImpl();
+  final SolarLocalDataSource solarLocalDataSource =
+      SolarLocalDataSourceImpl(localStorage: solarLocalStorage);
   final SolarRemoteDataSource solarRemoteDataSource =
       SolarRemoteDataSourceImpl(solaraRepoConfig, '/monitoring');
 
