@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/params/fetch_params.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_unit_type.dart';
-import '../../../../../core/presentation/util/flows/solara_plot_data.dart';
 import '../../../../domain/usecases/solar_usecase.dart';
 import '../model/solar_ui_model.dart';
 
