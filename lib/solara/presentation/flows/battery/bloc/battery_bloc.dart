@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solara/solara/presentation/flows/battery/model/battery_ui_model.dart';
 
 import '../../../../../core/params/fetch_params.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
@@ -9,6 +10,16 @@ import '../../../../domain/usecases/battery_usecase.dart';
 
 part 'battery_event.dart';
 part 'battery_state.dart';
+
+final DateTime _date = DateTime.now();
+
+/// A time resolution that stops at day is sufficient. Going into the
+/// milliseconds makes testing tedious.
+///
+/// There might be a more idiomatic way to achieve this, but this is the most
+/// straightforward way that avoids an additional dependency on a package such
+/// as intl.
+final DateTime _currentDate = DateTime(_date.year, _date.month, _date.day);
 
 /// The bloc for managing the state of battery tab on the UI.
 class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
@@ -21,6 +32,10 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
           ),
           unitType: SolaraUnitType.watts,
           plotData: {},
+          batteryUiModel: BatteryUiModel(
+              date: _currentDate,
+              unitType: SolaraUnitType.watts,
+              plotData: <double, double>{}),
           blocStatus: SolaraBlocStatus.initial,
         )) {
     /// Register a method to fetch chart data.
@@ -52,32 +67,37 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
     }
 
     /// Filter away null dates and keep dates that exactly match [event.date]
-    batteryEntities = batteryEntities.where((e) {
-      final DateTime? d = e.date;
-      if (d != null) {
-        return d.year == event.date.year &&
-            d.month == event.date.month &&
-            d.day == event.date.day;
-      }
-      return false;
-    }).toList();
+    // batteryEntities = batteryEntities.where((e) {
+    //   final DateTime? d = e.date;
+    //   if (d != null) {
+    //     return d.year == event.date.year &&
+    //         d.month == event.date.month &&
+    //         d.day == event.date.day;
+    //   }
+    //   return false;
+    // }).toList();
 
-    SolaraPlotData plotData = {};
+    // SolaraPlotData plotData = {};
 
-    /// Populate [plotData] with data from filtered [batteryEntities].
-    for (var batteryEntity in batteryEntities) {
-      double? date = batteryEntity.date?.millisecondsSinceEpoch.toDouble();
-      double? watts = batteryEntity.watts?.toDouble();
-      if (date != null && watts != null) {
-        plotData[date] = watts;
-      }
-    }
+    // /// Populate [plotData] with data from filtered [batteryEntities].
+    // for (var batteryEntity in batteryEntities) {
+    //   double? date = batteryEntity.date?.millisecondsSinceEpoch.toDouble();
+    //   double? watts = batteryEntity.watts?.toDouble();
+    //   if (date != null && watts != null) {
+    //     plotData[date] = watts;
+    //   }
+    // }
+    final BatteryUiModel batteryUiModel = BatteryUiModel.fromEntityList(
+      batteryEntities: batteryEntities,
+      date: event.date,
+    );
 
     /// Emit a success state.
     emit(
       state.copyWith(
-        plotData: plotData,
+        plotData: {},
         date: event.date,
+        batteryUiModel: batteryUiModel,
         blocStatus: SolaraBlocStatus.success,
       ),
     );
@@ -85,11 +105,18 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
 
   void _onToggleWatts(ToggleWatts event, Emitter<BatteryState> emit) {
     emit(state.copyWith(blocStatus: SolaraBlocStatus.inProgress));
+
+    final BatteryUiModel batteryUiModel = state.batteryUiModel.copyWith(
+      unitType:
+          event.showKilowatt ? SolaraUnitType.kilowatts : SolaraUnitType.watts,
+    );
+
     emit(
       state.copyWith(
         unitType: event.showKilowatt
             ? SolaraUnitType.kilowatts
             : SolaraUnitType.watts,
+        batteryUiModel: batteryUiModel,
         blocStatus: SolaraBlocStatus.success,
       ),
     );

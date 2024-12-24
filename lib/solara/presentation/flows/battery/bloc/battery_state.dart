@@ -9,6 +9,7 @@ final class BatteryState extends Equatable {
     required this.date,
     required this.unitType,
     required this.plotData,
+    required this.batteryUiModel,
     required this.blocStatus,
   });
 
@@ -20,6 +21,8 @@ final class BatteryState extends Equatable {
 
   /// The raw data used to plot the line graph.
   final SolaraPlotData plotData;
+
+  final BatteryUiModel batteryUiModel;
 
   /// The status of [BatteryBloc].
   ///
@@ -35,6 +38,7 @@ final class BatteryState extends Equatable {
   List<Object> get props => [
         date,
         unitType,
+        batteryUiModel,
         blocStatus,
       ];
 
@@ -43,12 +47,14 @@ final class BatteryState extends Equatable {
     DateTime? date,
     SolaraUnitType? unitType,
     SolaraPlotData? plotData,
+    BatteryUiModel? batteryUiModel,
     SolaraBlocStatus? blocStatus,
   }) =>
       BatteryState(
         date: date ?? this.date,
         unitType: unitType ?? this.unitType,
         plotData: plotData ?? this.plotData,
+        batteryUiModel: batteryUiModel ?? this.batteryUiModel,
         blocStatus: blocStatus ?? this.blocStatus,
       );
 }
@@ -59,6 +65,7 @@ final class BatteryInitial extends BatteryState {
     required super.date,
     required super.unitType,
     required super.plotData,
+    required super.batteryUiModel,
     required super.blocStatus,
   });
 }
