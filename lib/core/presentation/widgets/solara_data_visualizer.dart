@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:solara/core/presentation/model/ui_model.dart';
 
 import '../util/flows/bloc/solara_unit_type.dart';
-import '../util/flows/solara_plot_data.dart';
 import 'solara_line_chart.dart';
 import 'util/solara_date_picker.dart';
 
@@ -16,28 +15,13 @@ class SolaraDataVisualizer extends StatelessWidget {
   /// Unit type and date can be selected.
   const SolaraDataVisualizer({
     super.key,
-    // required this.date,
-    // required this.plotData,
-    // required this.unitType,
     required this.onToggleUnit,
     required this.onDateChange,
     required this.uiModel,
   });
 
+  /// The UI model that contains the data needed to render the line chart.
   final UiModel uiModel;
-
-  // /// {@template solara.widgets.solaraDataVisualizer.date}
-  // /// The date for the data currently being displayed.
-  // /// {@endtemplate}
-  // final DateTime date;
-
-  // /// The raw data used to plot the line graph.
-  // final SolaraPlotData plotData;
-
-  // /// {@template solara.widgets.solaraDataVisualizer.unitType}
-  // /// What units should be used for the graph's watt data.
-  // /// {@endtemplate}
-  // final SolaraUnitType unitType;
 
   /// {@template solara.widgets.solaraDataVisualizer.onToggleUnit}
   /// A callback for when the user toggles the graph's units.
@@ -91,10 +75,10 @@ class _BottomRow extends StatelessWidget {
     required this.onDateChange,
   });
 
-  /// {@macro solara.widgets.solaraDataVisualizer.unitType}
+  /// What units should be used for the graph's watt data.
   final SolaraUnitType unitType;
 
-  /// {@macro solara.widgets.solaraDataVisualizer.date}
+  /// The date for the data currently being displayed.
   final DateTime currentlySelectedDate;
 
   /// {@macro solara.widgets.solaraDataVisualizer.onToggleUnit}
