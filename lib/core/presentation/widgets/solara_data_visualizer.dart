@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:solara/core/presentation/model/ui_model.dart';
 
 import '../util/flows/bloc/solara_unit_type.dart';
 import '../util/flows/solara_plot_data.dart';
@@ -15,25 +16,28 @@ class SolaraDataVisualizer extends StatelessWidget {
   /// Unit type and date can be selected.
   const SolaraDataVisualizer({
     super.key,
-    required this.date,
-    required this.plotData,
-    required this.unitType,
+    // required this.date,
+    // required this.plotData,
+    // required this.unitType,
     required this.onToggleUnit,
     required this.onDateChange,
+    required this.uiModel,
   });
 
-  /// {@template solara.widgets.solaraDataVisualizer.date}
-  /// The date for the data currently being displayed.
-  /// {@endtemplate}
-  final DateTime date;
+  final UiModel uiModel;
 
-  /// The raw data used to plot the line graph.
-  final SolaraPlotData plotData;
+  // /// {@template solara.widgets.solaraDataVisualizer.date}
+  // /// The date for the data currently being displayed.
+  // /// {@endtemplate}
+  // final DateTime date;
 
-  /// {@template solara.widgets.solaraDataVisualizer.unitType}
-  /// What units should be used for the graph's watt data.
-  /// {@endtemplate}
-  final SolaraUnitType unitType;
+  // /// The raw data used to plot the line graph.
+  // final SolaraPlotData plotData;
+
+  // /// {@template solara.widgets.solaraDataVisualizer.unitType}
+  // /// What units should be used for the graph's watt data.
+  // /// {@endtemplate}
+  // final SolaraUnitType unitType;
 
   /// {@template solara.widgets.solaraDataVisualizer.onToggleUnit}
   /// A callback for when the user toggles the graph's units.
@@ -46,7 +50,8 @@ class SolaraDataVisualizer extends StatelessWidget {
   final void Function(DateTime) onDateChange;
 
   /// Returns a formatted date to be used as the x-axis label.
-  String get _date => '${date.year}/${date.month}/${date.day}';
+  String get _date =>
+      '${uiModel.date.year}/${uiModel.date.month}/${uiModel.date.day}';
 
   @override
   Widget build(BuildContext context) {
@@ -56,15 +61,15 @@ class SolaraDataVisualizer extends StatelessWidget {
         SolaraLineChart(
           key: Key('solaraGraph'),
           xLabel: _date,
-          plotData: plotData,
-          unitType: unitType,
+          plotData: uiModel.plotData,
+          unitType: uiModel.unitType,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: _BottomRow(
             key: const Key('solaraBottomRow'),
-            currentlySelectedDate: date,
-            unitType: unitType,
+            currentlySelectedDate: uiModel.date,
+            unitType: uiModel.unitType,
             onDateChange: onDateChange,
             onToggleUnit: onToggleUnit,
           ),

@@ -25,13 +25,13 @@ final DateTime _currentDate = DateTime(_date.year, _date.month, _date.day);
 class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
   BatteryBloc({required this.fetchBatteryUseCase})
       : super(BatteryInitial(
-          date: DateTime(
-            DateTime.now().year,
-            DateTime.now().month,
-            DateTime.now().day,
-          ),
-          unitType: SolaraUnitType.watts,
-          plotData: {},
+          // date: DateTime(
+          //   DateTime.now().year,
+          //   DateTime.now().month,
+          //   DateTime.now().day,
+          // ),
+          // unitType: SolaraUnitType.watts,
+          // plotData: {},
           batteryUiModel: BatteryUiModel(
               date: _currentDate,
               unitType: SolaraUnitType.watts,
@@ -66,27 +66,7 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
       return;
     }
 
-    /// Filter away null dates and keep dates that exactly match [event.date]
-    // batteryEntities = batteryEntities.where((e) {
-    //   final DateTime? d = e.date;
-    //   if (d != null) {
-    //     return d.year == event.date.year &&
-    //         d.month == event.date.month &&
-    //         d.day == event.date.day;
-    //   }
-    //   return false;
-    // }).toList();
-
-    // SolaraPlotData plotData = {};
-
-    // /// Populate [plotData] with data from filtered [batteryEntities].
-    // for (var batteryEntity in batteryEntities) {
-    //   double? date = batteryEntity.date?.millisecondsSinceEpoch.toDouble();
-    //   double? watts = batteryEntity.watts?.toDouble();
-    //   if (date != null && watts != null) {
-    //     plotData[date] = watts;
-    //   }
-    // }
+    /// Build a Ui model from results.
     final BatteryUiModel batteryUiModel = BatteryUiModel.fromEntityList(
       batteryEntities: batteryEntities,
       date: event.date,
@@ -95,8 +75,8 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
     /// Emit a success state.
     emit(
       state.copyWith(
-        plotData: {},
-        date: event.date,
+        // plotData: {},
+        // date: event.date,
         batteryUiModel: batteryUiModel,
         blocStatus: SolaraBlocStatus.success,
       ),
@@ -113,9 +93,9 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
 
     emit(
       state.copyWith(
-        unitType: event.showKilowatt
-            ? SolaraUnitType.kilowatts
-            : SolaraUnitType.watts,
+        // unitType: event.showKilowatt
+        //     ? SolaraUnitType.kilowatts
+        //     : SolaraUnitType.watts,
         batteryUiModel: batteryUiModel,
         blocStatus: SolaraBlocStatus.success,
       ),

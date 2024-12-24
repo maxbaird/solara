@@ -18,6 +18,7 @@ class BatteryUiModel implements UiModel {
   }) {
     _date = date;
     _unitType = SolaraUnitType.watts;
+    _plotData = <double, double>{};
 
     /// Filter away null dates and keep dates that exactly match [date]
     batteryEntities = batteryEntities.where((e) {
@@ -50,10 +51,10 @@ class BatteryUiModel implements UiModel {
   late final SolaraPlotData _plotData;
 
   @override
-  String get date => _date.toIso8601String();
+  DateTime get date => _date;
 
   @override
-  String get unitType => _unitType.unit;
+  SolaraUnitType get unitType => _unitType;
 
   @override
   SolaraPlotData get plotData => _plotData;
