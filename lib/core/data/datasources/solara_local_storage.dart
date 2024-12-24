@@ -4,15 +4,18 @@ import '../../resources/solara_io_exception.dart';
 import '../../util/logger.dart';
 import 'solara_persistence_interface.dart';
 
+/// Allows for the management of the application's cache.
 class SolaraLocalStorage implements SolaraPersistenceInterface {
   SolaraLocalStorage({required this.storageName});
 
   Box<dynamic>? _cache;
   final _log = logger;
 
+  /// {@macro solara.core.data.datasources.SolaraPersistenceInterface.storageName}
   @override
   final String storageName;
 
+  /// {@macro solara.core.data.datasources.SolaraPersistenceInterface.init}
   @override
   Future<(bool, SolaraIOException?)> init() async {
     try {
@@ -28,6 +31,7 @@ class SolaraLocalStorage implements SolaraPersistenceInterface {
     }
   }
 
+  /// {@macro solara.core.data.datasources.SolaraPersistenceInterface.readAll}
   @override
   Future<(dynamic, SolaraIOException?)> readAll() async {
     try {
@@ -55,6 +59,7 @@ class SolaraLocalStorage implements SolaraPersistenceInterface {
     }
   }
 
+  /// {@macro solara.core.data.datasources.SolaraPersistenceInterface.write}
   @override
   Future<(bool, SolaraIOException?)> write(String key, dynamic value) async {
     try {
@@ -81,6 +86,7 @@ class SolaraLocalStorage implements SolaraPersistenceInterface {
     }
   }
 
+  /// {@macro solara.core.data.datasources.SolaraPersistenceInterface.clearAll}
   @override
   Future<(bool, SolaraIOException?)> clearAll() async {
     try {
