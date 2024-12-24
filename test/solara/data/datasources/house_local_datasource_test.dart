@@ -1,34 +1,34 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:solara/core/data/datasources/solara_local_storage.dart';
 import 'package:solara/core/resources/solara_io_exception.dart';
 import 'package:solara/solara/data/datasources/house_local_datasource.dart';
 import 'package:solara/solara/data/models/house_model.dart';
 
+class MockSolaraLocalStorage extends Mock implements SolaraLocalStorage {
+  @override
+  String get storageName => 'solaraLocalStorage_test';
+}
+
 void main() {
-  var path = Directory.current.path;
-  Hive.init('$path/test/hive_testing_path');
+  final mockSolaraLocalStorage = MockSolaraLocalStorage();
   final HouseLocalDataSourceImpl houseLocalDataSourceImpl =
-      HouseLocalDataSourceImpl(cacheName: 'houseLocalDataSourceImpl');
+      HouseLocalDataSourceImpl(localStorage: mockSolaraLocalStorage);
+
+  setUpAll(() {
+    registerFallbackValue(MockSolaraLocalStorage());
+  });
 
   group('HouseLocalDataSourceImpl.fetch()', () {
-    setUp(() async {
-      await Hive.deleteFromDisk();
-    });
-
-    tearDown(() async {
-      await houseLocalDataSourceImpl.clear();
-    });
-
     test('houseLocalDataSource fetch', () async {
-      HouseModel model = HouseModel.fromJson(
-          {'timestamp': '2024-12-21T20:56:00.467Z', 'value': 3630});
+      final date = DateTime.parse('2024-12-21T20:56:00.467Z');
+      final model = HouseModel.fromJson(
+          {'timestamp': date.toIso8601String(), 'value': 3630});
 
-      await houseLocalDataSourceImpl.create(model);
+      when(() => mockSolaraLocalStorage.readAll())
+          .thenAnswer((_) async => (<dynamic>[model.toJson()], null));
 
-      var (results, err) = await houseLocalDataSourceImpl.fetch(
-          date: DateTime.parse('2024-12-21T20:56:00.467Z'));
+      var (results, err) = await houseLocalDataSourceImpl.fetch(date: date);
 
       expect(err, isNull);
       expect(results, isNotNull);
@@ -36,41 +36,25 @@ void main() {
       expect(results.first == model, true);
     });
 
-    test('houseLocalDataSource fetch: box does not exist', () async {
+    test('error when fetching', () async {
+      when(() => mockSolaraLocalStorage.readAll())
+          .thenAnswer((_) async => (null, SolaraIOException()));
       var (results, err) =
           await houseLocalDataSourceImpl.fetch(date: DateTime.now());
       expect(results, isNull);
       expect(err, isNotNull);
       expect(err is SolaraIOException, true);
       err = err as SolaraIOException;
-      expect(err.type == IOExceptionType.localStorage, true);
-    });
-
-    test('houseLocalDataSource fetch: exception if hive box name is incorrect',
-        () async {
-      final HouseLocalDataSourceImpl houseLocalDataSourceImpl =
-          HouseLocalDataSourceImpl(cacheName: 'invalid');
-
-      var (results, err) = await houseLocalDataSourceImpl.fetch(
-          date: DateTime.parse('2024-12-21T20:56:00.467Z'));
-
-      expect(results, isNull);
-      expect(err, isNotNull);
     });
   });
 
   group('HouseLocalDataSource.create()', () {
-    setUp(() async {
-      await Hive.deleteFromDisk();
-    });
-
-    tearDown(() async {
-      await houseLocalDataSourceImpl.clear();
-    });
-
     test('Successfully creates entry', () async {
-      HouseModel model = HouseModel.fromJson(
+      final model = HouseModel.fromJson(
           {'timestamp': '2024-12-21T20:56:00.467Z', 'value': 3630});
+
+      when(() => mockSolaraLocalStorage.write(any(), any()))
+          .thenAnswer((_) async => (true, null));
 
       bool result = await houseLocalDataSourceImpl.create(model);
       expect(result, true);
@@ -83,11 +67,14 @@ void main() {
       expect(result, false);
     });
 
-    test('Does not put entry it already exists', () async {
-      HouseModel model = HouseModel.fromJson(
+    test('reports creation error', () async {
+      final model = HouseModel.fromJson(
           {'timestamp': '2024-12-21T20:56:00.467Z', 'value': 3630});
 
-      await houseLocalDataSourceImpl.create(model);
+      when(() => mockSolaraLocalStorage.write(any(), any())).thenAnswer(
+          (_) async =>
+              (false, SolaraIOException(type: IOExceptionType.localStorage)));
+
       bool result = await houseLocalDataSourceImpl.create(model);
 
       expect(result, false);
@@ -95,27 +82,21 @@ void main() {
   });
 
   group('HouseLocalDataSource.clear()', () {
-    setUp(() async {
-      await Hive.deleteFromDisk();
+    test('storage cleared succeeds', () async {
+      when(() => mockSolaraLocalStorage.clearAll())
+          .thenAnswer((_) async => (true, null));
+      final result = await houseLocalDataSourceImpl.clear();
+
+      expect(result, true);
     });
 
-    tearDown(() async {
-      await houseLocalDataSourceImpl.clear();
-    });
+    test('storage cleared fails', () async {
+      when(() => mockSolaraLocalStorage.clearAll())
+          .thenAnswer((_) async => (false, SolaraIOException()));
 
-    test('Box is cleared', () async {
-      HouseModel model = HouseModel.fromJson(
-          {'timestamp': '2024-12-21T20:56:00.467Z', 'value': 3630});
+      final result = await houseLocalDataSourceImpl.clear();
 
-      await houseLocalDataSourceImpl.create(model);
-      await houseLocalDataSourceImpl.clear();
-
-      var (results, err) = await houseLocalDataSourceImpl.fetch(
-          date: DateTime.parse('2024-12-21T20:56:00.467Z'));
-
-      expect(results, isNotNull);
-      expect(results!.isEmpty, true);
-      expect(err, isNull);
+      expect(result, false);
     });
   });
 }

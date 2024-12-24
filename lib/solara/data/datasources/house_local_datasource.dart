@@ -47,12 +47,14 @@ class HouseLocalDataSourceImpl implements HouseLocalDataSource {
   }
 
   @override
-  Future<void> clear() async {
+  Future<bool> clear() async {
     var (result, err) = await localStorage.clearAll();
 
     if (err != null || !result) {
       _log.e('Error clearing local  storage: $err');
     }
+
+    return result;
   }
 
   /// Data fetched from the API can sometimes contain data from
@@ -103,5 +105,5 @@ abstract class HouseLocalDataSource {
   Future<bool> create(HouseModel model);
 
   /// Clears all data written to cache.
-  Future<void> clear();
+  Future<bool> clear();
 }
