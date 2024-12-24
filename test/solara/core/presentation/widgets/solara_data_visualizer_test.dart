@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:solara/core/presentation/model/ui_model.dart';
 import 'package:solara/core/presentation/util/flows/bloc/solara_unit_type.dart';
+import 'package:solara/core/presentation/util/flows/solara_plot_data.dart';
 import 'package:solara/core/presentation/widgets/solara_data_visualizer.dart';
 
+class MockUiDataModel implements UiModel {
+  @override
+  DateTime get date => DateTime.now();
+
+  @override
+  SolaraUnitType get unitType => SolaraUnitType.watts;
+
+  @override
+  SolaraPlotData get plotData => {1.0: 1.0};
+}
+
 void main() {
+  final mockUiDataModel = MockUiDataModel();
   group('Data visualizer tests', () {
     testWidgets('data visualizer has shows graph', (tester) async {
       const key = Key('solaraDataVisualizer');
@@ -12,9 +26,7 @@ void main() {
         home: Scaffold(
           body: SolaraDataVisualizer(
             key: key,
-            date: DateTime.now(),
-            plotData: {1.0: 1.0},
-            unitType: SolaraUnitType.watts,
+            uiModel: mockUiDataModel,
             onToggleUnit: (_) {},
             onDateChange: (_) {},
           ),
@@ -30,9 +42,7 @@ void main() {
         home: Scaffold(
           body: SolaraDataVisualizer(
             key: const Key('solarDataVisualizer'),
-            date: DateTime.now(),
-            plotData: {1.0: 1.0},
-            unitType: SolaraUnitType.watts,
+            uiModel: mockUiDataModel,
             onToggleUnit: (_) {},
             onDateChange: (_) {},
           ),
@@ -47,9 +57,7 @@ void main() {
         home: Scaffold(
           body: SolaraDataVisualizer(
             key: const Key('solarDataVisualizer'),
-            date: DateTime.now(),
-            plotData: {1.0: 1.0},
-            unitType: SolaraUnitType.watts,
+            uiModel: mockUiDataModel,
             onToggleUnit: (_) {},
             onDateChange: (_) {},
           ),
@@ -64,9 +72,7 @@ void main() {
         home: Scaffold(
           body: SolaraDataVisualizer(
             key: const Key('solarDataVisualizer'),
-            date: DateTime.now(),
-            plotData: {1.0: 1.0},
-            unitType: SolaraUnitType.watts,
+            uiModel: mockUiDataModel,
             onToggleUnit: (_) {},
             onDateChange: (_) {},
           ),
@@ -81,9 +87,7 @@ void main() {
         home: Scaffold(
           body: SolaraDataVisualizer(
             key: const Key('solarDataVisualizer'),
-            date: DateTime.now(),
-            plotData: {1.0: 1.0},
-            unitType: SolaraUnitType.watts,
+            uiModel: mockUiDataModel,
             onToggleUnit: (_) {},
             onDateChange: (_) {},
           ),
@@ -104,9 +108,7 @@ void main() {
         home: Scaffold(
           body: SolaraDataVisualizer(
             key: const Key('solarDataVisualizer'),
-            date: DateTime.now(),
-            plotData: {1.0: 1.0},
-            unitType: SolaraUnitType.watts,
+            uiModel: mockUiDataModel,
             onToggleUnit: (_) {},
             onDateChange: (d) => date = d,
           ),
@@ -133,9 +135,7 @@ void main() {
         home: Scaffold(
           body: SolaraDataVisualizer(
             key: const Key('solarDataVisualizer'),
-            date: DateTime.now(),
-            plotData: {1.0: 1.0},
-            unitType: SolaraUnitType.watts,
+            uiModel: mockUiDataModel,
             onToggleUnit: (showKilo) => showKilowatt = showKilo,
             onDateChange: (_) {},
           ),
