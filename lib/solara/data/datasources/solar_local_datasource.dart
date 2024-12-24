@@ -1,5 +1,3 @@
-import 'package:hive_flutter/hive_flutter.dart';
-
 import '../../../core/data/datasources/solara_persistence_interface.dart';
 import '../../../core/resources/solara_io_exception.dart';
 import '../../../core/util/logger.dart';
@@ -13,13 +11,6 @@ class SolarLocalDataSourceImpl implements SolarLocalDataSource {
   final SolaraPersistenceInterface localStorage;
 
   final _log = logger;
-
-  /// The name of the data cache.
-  late final String _cacheName;
-
-  /// The container used for the cache.
-  Box<dynamic>? _cache;
-  // final _log = logger;
 
   @override
   Future<(List<SolarModel>?, SolaraIOException?)> fetch(
