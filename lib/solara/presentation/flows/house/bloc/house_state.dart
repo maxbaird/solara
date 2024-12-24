@@ -6,20 +6,12 @@ part of 'house_bloc.dart';
 /// responsible for is initialized and updated in this class.
 final class HouseState extends Equatable {
   const HouseState({
-    required this.date,
-    required this.unitType,
-    required this.plotData,
+    required this.houseUiModel,
     required this.blocStatus,
   });
 
-  /// The date associated with the [plotData] being displayed.
-  final DateTime date;
-
-  /// The current units used to display the wattage.
-  final SolaraUnitType unitType;
-
-  /// The raw data used to plot the line graph.
-  final SolaraPlotData plotData;
+  /// The presentation data for the UI.
+  final HouseUiModel houseUiModel;
 
   /// The status of [HouseBloc].
   ///
@@ -33,22 +25,17 @@ final class HouseState extends Equatable {
   /// be updated from the back-end.
   @override
   List<Object> get props => [
-        date,
-        unitType,
+        houseUiModel,
         blocStatus,
       ];
 
   /// A utility method to quickly create a new instance of an existing state.
   HouseState copyWith({
-    DateTime? date,
-    SolaraUnitType? unitType,
-    SolaraPlotData? plotData,
+    HouseUiModel? houseUiModel,
     SolaraBlocStatus? blocStatus,
   }) =>
       HouseState(
-        date: date ?? this.date,
-        unitType: unitType ?? this.unitType,
-        plotData: plotData ?? this.plotData,
+        houseUiModel: houseUiModel ?? this.houseUiModel,
         blocStatus: blocStatus ?? this.blocStatus,
       );
 }
@@ -56,9 +43,7 @@ final class HouseState extends Equatable {
 /// The initial state of the bloc.
 final class HouseInitial extends HouseState {
   const HouseInitial({
-    required super.date,
-    required super.unitType,
-    required super.plotData,
+    required super.houseUiModel,
     required super.blocStatus,
   });
 }

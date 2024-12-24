@@ -4,25 +4,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/params/fetch_params.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_unit_type.dart';
-import '../../../../../core/presentation/util/flows/solara_plot_data.dart';
 import '../../../../domain/usecases/house_usecase.dart';
+import '../model/house_ui_model.dart';
 
 part 'house_event.dart';
 part 'house_state.dart';
 
+final DateTime _date = DateTime.now();
+
+/// A time resolution that stops at day is sufficient. Going into the
+/// milliseconds makes testing tedious.
+///
+/// There might be a more idiomatic way to achieve this, but this is the most
+/// straightforward way that avoids an additional dependency on a package such
+/// as intl.
+final DateTime _currentDate = DateTime(_date.year, _date.month, _date.day);
+
 /// The bloc for managing the state of house tab on the UI.
 class HouseBloc extends Bloc<HouseEvent, HouseState> {
   HouseBloc({required this.fetchHouseUseCase})
-      : super(HouseInitial(
-          date: DateTime(
-            DateTime.now().year,
-            DateTime.now().month,
-            DateTime.now().day,
+      : super(
+          HouseInitial(
+            houseUiModel: HouseUiModel(
+              date: _currentDate,
+              unitType: SolaraUnitType.watts,
+              plotData: <double, double>{},
+            ),
+            blocStatus: SolaraBlocStatus.initial,
           ),
-          unitType: SolaraUnitType.watts,
-          plotData: {},
-          blocStatus: SolaraBlocStatus.initial,
-        )) {
+        ) {
     /// Register a method to fetch chart data.
     on<Fetch>(_onFetch);
 
@@ -51,34 +61,16 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
       return;
     }
 
-    /// Filter away null dates and keep dates that exactly match [event.date]
-    houseEntities = houseEntities.where((e) {
-      final DateTime? d = e.date;
-      if (d != null) {
-        return d.year == event.date.year &&
-            d.month == event.date.month &&
-            d.day == event.date.day;
-      }
-      return false;
-    }).toList();
-
-    SolaraPlotData plotData = {};
-
-    /// Populate [plotData] with data from filtered [houseEntities].
-    for (var houseEntity in houseEntities) {
-      double? date = houseEntity.date?.millisecondsSinceEpoch.toDouble();
-      double? watts = houseEntity.watts?.toDouble();
-
-      if (date != null && watts != null) {
-        plotData[date] = watts;
-      }
-    }
+    /// Build a Ui model from results.
+    final HouseUiModel houseUiModel = HouseUiModel.fromEntityList(
+      houseEntities: houseEntities,
+      date: event.date,
+    );
 
     /// Emit a success state.
     emit(
       state.copyWith(
-        plotData: plotData,
-        date: event.date,
+        houseUiModel: houseUiModel,
         blocStatus: SolaraBlocStatus.success,
       ),
     );
@@ -86,11 +78,15 @@ class HouseBloc extends Bloc<HouseEvent, HouseState> {
 
   void _onToggleWatts(ToggleWatts event, Emitter<HouseState> emit) {
     emit(state.copyWith(blocStatus: SolaraBlocStatus.inProgress));
+
+    final HouseUiModel houseUiModel = state.houseUiModel.copyWith(
+      unitType:
+          event.showKilowatt ? SolaraUnitType.kilowatts : SolaraUnitType.watts,
+    );
+
     emit(
       state.copyWith(
-        unitType: event.showKilowatt
-            ? SolaraUnitType.kilowatts
-            : SolaraUnitType.watts,
+        houseUiModel: houseUiModel,
         blocStatus: SolaraBlocStatus.success,
       ),
     );

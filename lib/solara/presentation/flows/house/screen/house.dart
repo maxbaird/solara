@@ -36,7 +36,17 @@ class _HouseState extends State<House>
           SolaraBlocStatus.initial => const SolaraCircularProgressIndicator(),
           SolaraBlocStatus.inProgress =>
             const SolaraCircularProgressIndicator(),
-          SolaraBlocStatus.success => const Placeholder(),
+          SolaraBlocStatus.success => SolaraDataVisualizer(
+              uiModel: state.houseUiModel,
+              onToggleUnit: (showKilowatt) => _onToggleUnit(
+                showKilowatt,
+                context,
+              ),
+              onDateChange: (date) => _onDateChange(
+                date,
+                context,
+              ),
+            ),
           // SolaraBlocStatus.success => SolaraDataVisualizer(
           //     date: state.date,
           //     plotData: state.plotData,
