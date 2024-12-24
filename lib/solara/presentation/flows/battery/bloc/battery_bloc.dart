@@ -5,7 +5,6 @@ import 'package:solara/solara/presentation/flows/battery/model/battery_ui_model.
 import '../../../../../core/params/fetch_params.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_bloc_status.dart';
 import '../../../../../core/presentation/util/flows/bloc/solara_unit_type.dart';
-import '../../../../../core/presentation/util/flows/solara_plot_data.dart';
 import '../../../../domain/usecases/battery_usecase.dart';
 
 part 'battery_event.dart';
@@ -24,20 +23,16 @@ final DateTime _currentDate = DateTime(_date.year, _date.month, _date.day);
 /// The bloc for managing the state of battery tab on the UI.
 class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
   BatteryBloc({required this.fetchBatteryUseCase})
-      : super(BatteryInitial(
-          // date: DateTime(
-          //   DateTime.now().year,
-          //   DateTime.now().month,
-          //   DateTime.now().day,
-          // ),
-          // unitType: SolaraUnitType.watts,
-          // plotData: {},
-          batteryUiModel: BatteryUiModel(
+      : super(
+          BatteryInitial(
+            batteryUiModel: BatteryUiModel(
               date: _currentDate,
               unitType: SolaraUnitType.watts,
-              plotData: <double, double>{}),
-          blocStatus: SolaraBlocStatus.initial,
-        )) {
+              plotData: <double, double>{},
+            ),
+            blocStatus: SolaraBlocStatus.initial,
+          ),
+        ) {
     /// Register a method to fetch chart data.
     on<Fetch>(_onFetch);
 
@@ -75,8 +70,6 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
     /// Emit a success state.
     emit(
       state.copyWith(
-        // plotData: {},
-        // date: event.date,
         batteryUiModel: batteryUiModel,
         blocStatus: SolaraBlocStatus.success,
       ),
@@ -93,9 +86,6 @@ class BatteryBloc extends Bloc<BatteryEvent, BatteryState> {
 
     emit(
       state.copyWith(
-        // unitType: event.showKilowatt
-        //     ? SolaraUnitType.kilowatts
-        //     : SolaraUnitType.watts,
         batteryUiModel: batteryUiModel,
         blocStatus: SolaraBlocStatus.success,
       ),

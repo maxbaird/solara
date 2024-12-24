@@ -38,9 +38,6 @@ class _BatteryState extends State<Battery>
             const SolaraCircularProgressIndicator(),
           SolaraBlocStatus.success => SolaraDataVisualizer(
               uiModel: state.batteryUiModel,
-              // date: state.date,
-              // plotData: state.plotData,
-              // unitType: state.unitType,
               onToggleUnit: (showKilowatt) => _onToggleUnit(
                 showKilowatt,
                 context,
