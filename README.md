@@ -1,2 +1,2 @@
 # solara
-A basic flutter project that displays graphs of data pulled from a backend.
+A basic flutter project that displays line charts of data pulled from a backend.
