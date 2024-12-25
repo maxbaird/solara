@@ -33,7 +33,7 @@ final ThemeData themeDataLight = ThemeData.light(
         if (states.contains(WidgetState.selected)) {
           return kSolaraGreenDark;
         } else {
-          return kSolaraWhite;
+          return kSolaraGreyGreen;
         }
       },
     ),
