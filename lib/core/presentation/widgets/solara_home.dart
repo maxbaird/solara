@@ -164,6 +164,7 @@ class _SolaraHome extends StatelessWidget {
   }
 }
 
+/// A button for switching between light and dark theme.
 class _ThemeSwitchButton extends StatelessWidget {
   const _ThemeSwitchButton();
 

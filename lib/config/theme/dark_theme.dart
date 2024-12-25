@@ -9,7 +9,7 @@ const ColorScheme _colorSchemeDark = ColorScheme(
   error: kSolaraRed,
   onError: kSolaraWhite,
   surface: kSolaraOlive3,
-  onSurface: kSolaraWhiteBluish,
+  onSurface: kSolaraWhiteGreenish,
 );
 
 final ThemeData themeDataDark = ThemeData.dark(
