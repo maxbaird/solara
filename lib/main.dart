@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'config/theme/bloc/theme_bloc.dart';
@@ -10,6 +11,8 @@ import 'solara/presentation/flows/solar/screen/solar.dart';
 
 void main() async {
   await dependency_injector.init();
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const Solara());
 }
 
