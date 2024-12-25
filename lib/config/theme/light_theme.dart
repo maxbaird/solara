@@ -48,6 +48,10 @@ final ThemeData themeDataLight = ThemeData.light(
     ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(foregroundColor: kSolaraGreenDark),
+    style: ElevatedButton.styleFrom(
+      foregroundColor: kSolaraGreenDark,
+      iconColor: kSolaraGreenDark,
+      backgroundColor: kSolaraGreyGreen,
+    ),
   ),
 );

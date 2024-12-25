@@ -12,3 +12,4 @@ const Color kSolaraGreyDark = Color(0xFF444a42);
 const Color kSolaraGreenDark = Color(0xFF3B693A);
 const Color kSolaraRed = Color(0xFFF22F1B);
 const Color kSolaraOlive3 = Color(0xFF273C3B);
+const Color kSolaraGreyGreen = Color(0xFFF1F5ED);
