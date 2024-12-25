@@ -54,4 +54,20 @@ final ThemeData themeDataDark = ThemeData.dark(
       backgroundColor: kSolaraGreyGreen,
     ),
   ),
+  datePickerTheme: DatePickerThemeData(
+    confirmButtonStyle: ButtonStyle().copyWith(
+      foregroundColor: WidgetStateColor.resolveWith(
+        (_) {
+          return kSolaraWhite;
+        },
+      ),
+    ),
+    cancelButtonStyle: ButtonStyle().copyWith(
+      foregroundColor: WidgetStateColor.resolveWith(
+        (_) {
+          return kSolaraWhite;
+        },
+      ),
+    ),
+  ),
 );
