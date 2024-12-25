@@ -1,5 +1,3 @@
-import 'package:equatable/equatable.dart';
-
 import '../util/flows/bloc/solara_unit_type.dart';
 import '../util/flows/solara_plot_data.dart';
 
