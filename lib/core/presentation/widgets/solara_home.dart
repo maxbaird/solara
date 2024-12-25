@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solara/config/theme/bloc/theme_bloc.dart';
 
 import '../../../injection_container.dart';
 import '../../../solara/domain/usecases/clear_storage_usecase.dart';
@@ -144,6 +145,11 @@ class _SolaraHome extends StatelessWidget {
       initialIndex: 0,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                context.read<ThemeBloc>().add(const ThemeSwitchEvent());
+              },
+              icon: Icon(Icons.sunny)),
           key: Key('solaraAppBar'),
           title: SolaraTitle('Solara'),
           centerTitle: true,
