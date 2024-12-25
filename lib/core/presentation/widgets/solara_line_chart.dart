@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:solara/config/theme/colors.dart';
 
 import '../util/flows/bloc/solara_unit_type.dart';
 import '../util/flows/solara_plot_data.dart';
@@ -94,6 +95,12 @@ class _LineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
+        borderData: FlBorderData(
+          show: true,
+          border: Border.all(
+            color: kSolaraGreyLight,
+          ),
+        ),
         titlesData: FlTitlesData(
           leftTitles: _YAxisTitle(
             label: yLabel,

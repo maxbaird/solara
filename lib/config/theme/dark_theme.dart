@@ -31,7 +31,7 @@ final ThemeData themeDataDark = ThemeData.dark(
     trackColor: WidgetStateColor.resolveWith(
       (states) {
         if (states.contains(WidgetState.selected)) {
-          return kSolaraGreenDark;
+          return kSolaraGreenDark2;
         } else {
           return kSolaraGreyGreen;
         }
@@ -42,15 +42,15 @@ final ThemeData themeDataDark = ThemeData.dark(
         if (states.contains(WidgetState.selected)) {
           return kSolaraWhite;
         } else {
-          return kSolaraGreenDark;
+          return kSolaraGreenDark2;
         }
       },
     ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      foregroundColor: kSolaraGreenDark,
-      iconColor: kSolaraGreenDark,
+      foregroundColor: kSolaraGreenDark2,
+      iconColor: kSolaraGreenDark2,
       backgroundColor: kSolaraGreyGreen,
     ),
   ),
