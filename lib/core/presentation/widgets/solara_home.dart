@@ -145,13 +145,9 @@ class _SolaraHome extends StatelessWidget {
       initialIndex: 0,
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {
-                context.read<ThemeBloc>().add(const ThemeSwitchEvent());
-              },
-              icon: Icon(Icons.sunny)),
           key: Key('solaraAppBar'),
           title: SolaraTitle('Solara'),
+          leading: const _ThemeSwitchButton(),
           centerTitle: true,
           actions: _actions,
           bottom: _bottom,
@@ -164,6 +160,22 @@ class _SolaraHome extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ThemeSwitchButton extends StatelessWidget {
+  const _ThemeSwitchButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        context.read<ThemeBloc>().add(const ThemeSwitchEvent());
+      },
+      icon: Theme.of(context).brightness == Brightness.dark
+          ? Icon(Icons.sunny)
+          : Icon(Icons.nightlight_round_outlined),
     );
   }
 }
