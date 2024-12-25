@@ -54,4 +54,18 @@ final ThemeData themeDataLight = ThemeData.light(
       backgroundColor: kSolaraGreyGreen,
     ),
   ),
+  datePickerTheme: DatePickerThemeData().copyWith(
+    dayForegroundColor: WidgetStateColor.resolveWith((states) {
+      if (states.contains(WidgetState.selected)) {
+        return kSolaraWhite;
+      }
+      return kSolaraGreenDark;
+    }),
+    todayForegroundColor: WidgetStateColor.resolveWith((states) {
+      if (states.contains(WidgetState.selected)) {
+        return kSolaraWhite;
+      }
+      return kSolaraGreenDark;
+    }),
+  ),
 );
