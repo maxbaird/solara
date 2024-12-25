@@ -9,6 +9,7 @@ import 'package:solara/core/resources/solara_io_exception.dart';
 import 'package:solara/solara/domain/entities/solar.dart';
 import 'package:solara/solara/domain/usecases/solar_usecase.dart';
 import 'package:solara/solara/presentation/flows/solar/bloc/solar_bloc.dart';
+import 'package:solara/solara/presentation/flows/solar/model/solar_ui_model.dart';
 
 class MockFetchSolarUseCase extends Mock implements FetchSolarUseCase {}
 
@@ -59,6 +60,14 @@ void main() {
   group('SolarBloc: fetch', () {
     dynamic act(SolarBloc bloc) => bloc.add(Fetch(date: date));
 
+    final DateTime currentDate = DateTime(date.year, date.month, date.day);
+
+    final uiModel = SolarUiModel(
+      date: currentDate,
+      unitType: SolaraUnitType.watts,
+      plotData: <double, double>{},
+    );
+
     blocTest('Fetches solar entities',
         build: build,
         setUp: () {
@@ -68,30 +77,22 @@ void main() {
         act: act,
         expect: () => <SolarState>[
               SolarState(
-                date: DateTime(
-                  DateTime.now().year,
-                  DateTime.now().month,
-                  DateTime.now().day,
-                ),
-                unitType: SolaraUnitType.watts,
-                plotData: {},
+                solarUiModel: uiModel,
                 blocStatus: SolaraBlocStatus.inProgress,
               ),
               SolarState(
-                date: date,
-                unitType: SolaraUnitType.watts,
-                plotData: plotData,
+                solarUiModel: uiModel,
                 blocStatus: SolaraBlocStatus.success,
               ),
             ],
         verify: (bloc) {
-          expect(bloc.state.plotData.length, plotData.length);
+          expect(bloc.state.solarUiModel.plotData.length, plotData.length);
 
           // Compare values; there is a loss of precision when comparing the dates
           // after being converted to milliseconds.
           for (int i = 0; i != plotData.length; ++i) {
             expect(
-                bloc.state.plotData.values.elementAt(i) ==
+                bloc.state.solarUiModel.plotData.values.elementAt(i) ==
                     plotData.values.elementAt(i),
                 true);
           }
@@ -106,30 +107,23 @@ void main() {
         act: act,
         expect: () => <SolarState>[
               SolarState(
-                date: DateTime(
-                  DateTime.now().year,
-                  DateTime.now().month,
-                  DateTime.now().day,
-                ),
-                unitType: SolaraUnitType.watts,
-                plotData: {},
+                solarUiModel: uiModel,
                 blocStatus: SolaraBlocStatus.inProgress,
               ),
               SolarState(
-                date: date,
-                unitType: SolaraUnitType.watts,
-                plotData: plotData,
+                solarUiModel: uiModel,
                 blocStatus: SolaraBlocStatus.success,
               ),
             ],
         verify: (bloc) {
-          expect(bloc.state.plotData.length, solarEntities.length - 1);
+          expect(bloc.state.solarUiModel.plotData.length,
+              solarEntities.length - 1);
 
           // Compare values; there is a loss of precision when comparing the dates
           // after being converted to milliseconds.
           for (int i = 0; i != plotData.length; ++i) {
             expect(
-                bloc.state.plotData.values.elementAt(i) ==
+                bloc.state.solarUiModel.plotData.values.elementAt(i) ==
                     plotData.values.elementAt(i),
                 true);
           }
@@ -167,16 +161,16 @@ void main() {
       'Toggles kilowatts on',
       build: build,
       act: (bloc) => bloc.add(ToggleWatts(showKilowatt: true)),
-      verify: (bloc) =>
-          expect(bloc.state.unitType == SolaraUnitType.kilowatts, true),
+      verify: (bloc) => expect(
+          bloc.state.solarUiModel.unitType == SolaraUnitType.kilowatts, true),
     );
 
     blocTest(
       'Toggles kilowatts off',
       build: build,
       act: (bloc) => bloc.add(ToggleWatts(showKilowatt: false)),
-      verify: (bloc) =>
-          expect(bloc.state.unitType == SolaraUnitType.watts, true),
+      verify: (bloc) => expect(
+          bloc.state.solarUiModel.unitType == SolaraUnitType.watts, true),
     );
   });
 }

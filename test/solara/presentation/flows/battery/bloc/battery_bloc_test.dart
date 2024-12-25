@@ -53,19 +53,21 @@ void main() {
     date3.microsecondsSinceEpoch.toDouble(): 3000,
   };
 
-  final DateTime currentDate = DateTime(date.year, date.month, date.day);
-
   setUpAll(() {
     registerFallbackValue(FetchParams());
   });
 
   group('BatteryBloc: fetch', () {
     dynamic act(BatteryBloc bloc) => bloc.add(Fetch(date: date));
+
+    final DateTime currentDate = DateTime(date.year, date.month, date.day);
+
     final uiModel = BatteryUiModel(
       date: currentDate,
       unitType: SolaraUnitType.watts,
       plotData: <double, double>{},
     );
+
     blocTest('Fetches battery entities',
         build: build,
         setUp: () {
@@ -96,43 +98,36 @@ void main() {
           }
         });
 
-    // blocTest('Filters battery entities outside of specified date',
-    //     build: build,
-    //     setUp: () {
-    //       when(() => mockFetchBatteryUseCase.call(params: any(named: 'params')))
-    //           .thenAnswer((_) async => (batteryEntities, null));
-    //     },
-    //     act: act,
-    //     expect: () => <BatteryState>[
-    //           BatteryState(
-    //             date: DateTime(
-    //               DateTime.now().year,
-    //               DateTime.now().month,
-    //               DateTime.now().day,
-    //             ),
-    //             unitType: SolaraUnitType.watts,
-    //             plotData: {},
-    //             blocStatus: SolaraBlocStatus.inProgress,
-    //           ),
-    //           BatteryState(
-    //             date: date,
-    //             unitType: SolaraUnitType.watts,
-    //             plotData: plotData,
-    //             blocStatus: SolaraBlocStatus.success,
-    //           ),
-    //         ],
-    //     verify: (bloc) {
-    //       expect(bloc.state.plotData.length, batteryEntities.length - 1);
+    blocTest('Filters battery entities outside of specified date',
+        build: build,
+        setUp: () {
+          when(() => mockFetchBatteryUseCase.call(params: any(named: 'params')))
+              .thenAnswer((_) async => (batteryEntities, null));
+        },
+        act: act,
+        expect: () => <BatteryState>[
+              BatteryState(
+                batteryUiModel: uiModel,
+                blocStatus: SolaraBlocStatus.inProgress,
+              ),
+              BatteryState(
+                batteryUiModel: uiModel,
+                blocStatus: SolaraBlocStatus.success,
+              ),
+            ],
+        verify: (bloc) {
+          expect(bloc.state.batteryUiModel.plotData.length,
+              batteryEntities.length - 1);
 
-    //       // Compare values; there is a loss of precision when comparing the dates
-    //       // after being converted to milliseconds.
-    //       for (int i = 0; i != plotData.length; ++i) {
-    //         expect(
-    //             bloc.state.plotData.values.elementAt(i) ==
-    //                 plotData.values.elementAt(i),
-    //             true);
-    //       }
-    //     });
+          // Compare values; there is a loss of precision when comparing the dates
+          // after being converted to milliseconds.
+          for (int i = 0; i != plotData.length; ++i) {
+            expect(
+                bloc.state.batteryUiModel.plotData.values.elementAt(i) ==
+                    plotData.values.elementAt(i),
+                true);
+          }
+        });
 
     blocTest(
       'Emits failure if usecase returns error',
